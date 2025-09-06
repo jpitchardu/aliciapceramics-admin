@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "aliciapceramics-admin",
-    "slug": "aliciapceramics-admin",
+    "slug": "aliciap-ceramics-admin",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -37,6 +37,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "2332d8b4-77c3-4bc8-97f0-9a00001dda32"
+      }
+    },
+    "owner": "jpichardo"
   }
 }
