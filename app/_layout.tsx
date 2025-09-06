@@ -7,7 +7,9 @@ import { GluestackUIProvider } from "@gluestack-ui/themed";
 export default function RootLayout() {
   return (
     <GluestackUIProvider config={aliciapCeramicsTheme}>
-      <Stack />
+      <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+      </Stack>
     </GluestackUIProvider>
   );
 }
