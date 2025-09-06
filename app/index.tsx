@@ -8,10 +8,20 @@ import {
   Text,
   VStack,
 } from "@gluestack-ui/themed";
-import React from "react";
+import { useRouter } from "expo-router";
+import React, { useCallback } from "react";
 
 export default function Dashboard() {
+  const router = useRouter();
   const ordersResponse = useOrders();
+
+  const onOrderItemPress = useCallback(
+    (id: string) => {
+      console.log("Pressing");
+      router.push(`/orders/${id}`);
+    },
+    [router]
+  );
 
   if (ordersResponse.status === "loading") {
     return <LoadingState />;
@@ -45,7 +55,11 @@ export default function Dashboard() {
       <ScrollView className="flex-1 px-5 py-6">
         <VStack className="space-y-3">
           {orders.map((order) => (
-            <OrderCard order={order} key={order.id} />
+            <OrderCard
+              order={order}
+              key={order.id}
+              onPress={onOrderItemPress}
+            />
           ))}
         </VStack>
       </ScrollView>

@@ -8,7 +8,20 @@ export default function RootLayout() {
   return (
     <GluestackUIProvider config={aliciapCeramicsTheme}>
       <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="index"
+          options={{
+            headerStyle: { backgroundColor: "var(--earthBg)" },
+            headerTitleStyle: { color: "var(--earthDark)" },
+          }}
+        />
+        <Stack.Screen
+          name="orders/[id]"
+          options={{
+            headerStyle: { backgroundColor: "var(--earthBg)" },
+            headerTitleStyle: { color: "var(--earthDark)" },
+          }}
+        />
       </Stack>
     </GluestackUIProvider>
   );

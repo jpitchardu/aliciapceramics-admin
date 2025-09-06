@@ -10,14 +10,19 @@ type OrderCardProps = {
     customers: { name: string } | null;
     order_details: { id: string; quantity: number; type: string }[];
   };
-  onPress?: () => void;
+  onPress: (id: string) => void;
 };
 
 export function OrderCard({ order, onPress }: OrderCardProps) {
   const statusStyles = getStatusStyles(order.status);
 
+  const onCardPress = () => {
+    console.log("pressings");
+    onPress(order.id);
+  };
+
   return (
-    <Pressable key={order.id}>
+    <Pressable key={order.id} onPress={onCardPress}>
       <Box
         className={`${statusStyles.cardBg} rounded-xl p-4 border-l-4 ${statusStyles.borderColor} border-2 border-transparent hover:border-orange-300 hover:-translate-y-0.5`}
       >
