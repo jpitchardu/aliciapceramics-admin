@@ -17,7 +17,6 @@ export default function Dashboard() {
 
   const onOrderItemPress = useCallback(
     (id: string) => {
-      console.log("Pressing");
       router.push(`/orders/${id}`);
     },
     [router]

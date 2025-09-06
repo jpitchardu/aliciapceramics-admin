@@ -11,15 +11,15 @@ export default function RootLayout() {
         <Stack.Screen
           name="index"
           options={{
-            headerStyle: { backgroundColor: "var(--earthBg)" },
-            headerTitleStyle: { color: "var(--earthDark)" },
+            headerStyle: { backgroundColor: "#fbfaf9" },
+            headerTitleStyle: { color: "#3d1900" },
           }}
         />
         <Stack.Screen
           name="orders/[id]"
           options={{
-            headerStyle: { backgroundColor: "var(--earthBg)" },
-            headerTitleStyle: { color: "var(--earthDark)" },
+            headerStyle: { backgroundColor: "#fbfaf9" },
+            headerTitleStyle: { color: "#3d1900" },
           }}
         />
       </Stack>

@@ -17,14 +17,13 @@ export function OrderCard({ order, onPress }: OrderCardProps) {
   const statusStyles = getStatusStyles(order.status);
 
   const onCardPress = () => {
-    console.log("pressings");
     onPress(order.id);
   };
 
   return (
-    <Pressable key={order.id} onPress={onCardPress}>
+    <Pressable onPress={onCardPress}>
       <Box
-        className={`${statusStyles.cardBg} rounded-xl p-4 border-l-4 ${statusStyles.borderColor} border-2 border-transparent hover:border-orange-300 hover:-translate-y-0.5`}
+        className={`${statusStyles.cardBg} rounded-xl p-4 border-l-4 ${statusStyles.borderColor} border-2 border-transparent`}
       >
         <VStack className="space-y-1">
           <HStack className="justify-between items-start">
