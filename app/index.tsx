@@ -2,7 +2,7 @@ import { OrderCard } from "@/components/orders/OrderCard";
 import { Box, Spinner, Text, VStack } from "@/components/ui";
 import { useOrders } from "@/hooks/useOrders";
 import { useRouter } from "expo-router";
-import React, { useCallback } from "react";
+import { memo, useCallback } from "react";
 import { ScrollView } from "react-native";
 
 export default function Dashboard() {
@@ -48,7 +48,7 @@ export default function Dashboard() {
   );
 }
 
-const LoadingState = React.memo(function LoadingState() {
+const LoadingState = memo(function LoadingState() {
   return (
     <Box className="flex-1 bg-primary-50">
       <Spinner size="large" />

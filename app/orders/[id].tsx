@@ -7,7 +7,7 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useOrderDetail } from "@/hooks/useOrderDetail";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { View } from "react-native";
 
 export default function OrderDetail() {
@@ -64,8 +64,6 @@ export default function OrderDetail() {
 
   const { data: order } = orderResponse;
 
-  console.log(JSON.stringify(order, null, 2));
-
   return (
     <View className="flex-1 bg-primary-50">
       <VStack className="p-5 gap-6">
@@ -81,35 +79,27 @@ export default function OrderDetail() {
         </VStack>
 
         <VStack className="gap-4">
-          <VStack className="gap-2">
-            <Text className="text-sm font-labelSemibold text-primary-900 uppercase tracking-wider">
-              Timeline
+          <Text className="text-sm font-labelSemibold text-primary-900 uppercase tracking-wider">
+            Timeline
+          </Text>
+          <Box className="bg-interactive-400/40 px-3 py-1 rounded-md self-start">
+            <Text className="text-sm font-medium text-primary-900">
+              {order.timeline}
             </Text>
-            <Box className="bg-interactive-400/40 px-3 py-1 rounded-md self-start">
-              <Text className="text-sm font-medium text-primary-900">
-                {order.timeline}
-              </Text>
-            </Box>
-          </VStack>
-          <VStack className="gap-2">
-            <Text className="text-sm font-labelSemibold text-primary-900 uppercase tracking-wider">
-              Inspiration
-            </Text>
-            <Text className="flex-1 text-sm text-primary-900 leading-5">
-              {order.inspiration || "No inspiration provided"}
-            </Text>
-          </VStack>
+          </Box>
+          <Text className="text-sm font-labelSemibold text-primary-900 uppercase tracking-wider">
+            Inspiration
+          </Text>
+          <Text className="text-sm text-primary-900 leading-5">
+            {order.inspiration}
+          </Text>
 
-          {order.special_considerations && (
-            <VStack className="gap-2">
-              <Text className="text-sm font-labelSemibold text-primary-900 uppercase tracking-wider">
-                Special Considerations
-              </Text>
-              <Text className="flex-1 text-sm text-primary-900 leading-5">
-                {order.special_considerations}
-              </Text>
-            </VStack>
-          )}
+          <Text className="text-sm font-labelSemibold text-primary-900 uppercase tracking-wider">
+            Special Considerations
+          </Text>
+          <Text className="text-sm text-primary-900 leading-5">
+            {order.special_considerations}
+          </Text>
 
           <VStack className="gap-2">
             <Text className="text-sm font-labelSemibold text-primary-900 uppercase tracking-wider">
