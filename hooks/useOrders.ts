@@ -67,7 +67,5 @@ export function useOrders(): OrdersResponse {
   if (loading) return { status: "loading", data: undefined, error: undefined };
   if (error) return { status: "error", error, data: undefined };
 
-  console.log({ data });
-
   return { status: "success", data, error: undefined };
 }

@@ -1,14 +1,12 @@
 import { Tables } from "@/api/dbTypes";
-import {
-  Box,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  HStack,
-  Pressable,
-  Text,
-  VStack,
-} from "@gluestack-ui/themed";
+
 import React, { useState } from "react";
+import { Box } from "../ui/box";
+import { HStack } from "../ui/hstack";
+import { ChevronDownIcon, ChevronUpIcon, Icon } from "../ui/icon";
+import { Pressable } from "../ui/pressable";
+import { Text } from "../ui/text";
+import { VStack } from "../ui/vstack";
 
 interface PieceAccordionProps {
   piece: Tables<"order_details">;
@@ -17,108 +15,39 @@ interface PieceAccordionProps {
 export function PieceAccordion({ piece }: PieceAccordionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const pieceEmoji = getPieceEmoji(piece.type);
-  const sizeText = piece.size ? ` • ${piece.size}"` : "";
-
   return (
-    <Box
-      style={{
-        backgroundColor: "white",
-        borderRadius: 12,
-        overflow: "hidden",
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 3,
-      }}
-    >
-      <Pressable
-        onPress={() => setIsExpanded(!isExpanded)}
-        style={{
-          minHeight: 44, // Accessibility touch target
-        }}
-      >
-        <HStack
-          style={{
-            padding: 16,
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <VStack style={{ alignItems: "center", flex: 1, gap: 12 }}>
-            <Text style={{ fontSize: 20 }}>{pieceEmoji}</Text>
-            <VStack style={{ flex: 1 }}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: "600",
-                  color: "var(--earthDark)",
-                }}
-              >
+    <Box className="bg-primary-100 rounded-md overflow-hidden ">
+      <Pressable onPress={() => setIsExpanded(!isExpanded)}>
+        <HStack className="items-center gap-3 p-4">
+          <VStack className="flex-1">
+            <HStack className="items-center gap-2">
+              <Text className="font-labelSemibold text-primary-900 text-base">
                 {piece.type}
-                {sizeText}
               </Text>
-            </VStack>
-            <Box
-              style={{
-                backgroundColor: "var(--blueBorder)",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                borderRadius: 12,
-              }}
-            >
-              <Text style={{ fontSize: 12, fontWeight: "600", color: "white" }}>
-                {piece.quantity}x
-              </Text>
-            </Box>
+              {piece.size && (
+                <Text className="text-sm text-primary-900">• {piece.size}</Text>
+              )}
+            </HStack>
           </VStack>
-
-          <Box style={{ marginLeft: 8 }}>
-            {isExpanded ? (
-              <ChevronUpIcon
-                style={{ width: 16, height: 16, color: "var(--stoneText)" }}
-              />
-            ) : (
-              <ChevronDownIcon
-                style={{ width: 16, height: 16, color: "var(--stoneText)" }}
-              />
-            )}
+          <Box className="bg-interactive-500 px-2 py-1 rounded-md">
+            <Text className="text-neutral-50 text-xs font-medium">
+              {piece.quantity}
+            </Text>
           </Box>
+          <Icon
+            as={isExpanded ? ChevronUpIcon : ChevronDownIcon}
+            className="text-primary-900"
+            style={{ width: 16, height: 16 }}
+          />
         </HStack>
       </Pressable>
-
       {isExpanded && (
-        <Box
-          style={{
-            paddingHorizontal: 16,
-            paddingBottom: 16,
-            borderTopWidth: 1,
-            borderTopColor: "var(--stoneBorder)",
-          }}
-        >
-          <Text
-            style={{ fontSize: 14, color: "var(--stoneText)", lineHeight: 20 }}
-          >
+        <HStack className="gap-3 px-4 pb-4">
+          <Text className="text-sm text-primary-900 italic">
             {piece.description}
           </Text>
-        </Box>
+        </HStack>
       )}
     </Box>
   );
-}
-
-function getPieceEmoji(type: string): string {
-  const typeMap: Record<string, string> = {
-    mug: "☕",
-    bowl: "🍲",
-    plate: "🍽️",
-    vase: "🏺",
-    cup: "🥤",
-    pitcher: "🫖",
-    planter: "🪴",
-    sculpture: "🎨",
-  };
-
-  return typeMap[type.toLowerCase()] || "🏺";
 }

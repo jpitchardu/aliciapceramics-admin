@@ -1,6 +1,6 @@
 // components/OrderCard.tsx
+import { Box, HStack, Pressable, Text, VStack } from "@/components/ui";
 import { Order } from "@/hooks/useOrders";
-import { Box, HStack, Pressable, Text, VStack } from "@gluestack-ui/themed";
 import React from "react";
 
 type OrderCardProps = {
@@ -27,7 +27,7 @@ export function OrderCard({ order, onPress }: OrderCardProps) {
       >
         <VStack className="space-y-1">
           <HStack className="justify-between items-start">
-            <Text className="text-lg font-semibold text-gray-800">
+            <Text className="text-lg font-semibold text-primary-900">
               {order.customers?.name || "Unknown Customer"}
             </Text>
             <Box className={`${statusStyles.badgeBg} px-3 py-1 rounded-lg`}>
@@ -36,7 +36,7 @@ export function OrderCard({ order, onPress }: OrderCardProps) {
               </Text>
             </Box>
           </HStack>
-          <Text className="text-sm text-gray-600 opacity-80">
+          <Text className="text-sm text-primary-900 opacity-80">
             {buildOrderSummary(order.order_details)}
           </Text>
         </VStack>
@@ -68,33 +68,33 @@ const getStatusStyles = (status: string | null) => {
   switch (status) {
     case "unread_messages":
       return {
-        cardBg: "bg-red-50",
-        borderColor: "border-l-red-500",
-        badgeBg: "bg-red-500",
+        cardBg: "bg-alert-600/10",
+        borderColor: "border-l-alert-600",
+        badgeBg: "bg-alert-600",
       };
     case "ready_to_work":
       return {
-        cardBg: "bg-orange-50",
-        borderColor: "border-l-orange-500",
-        badgeBg: "bg-orange-500",
+        cardBg: "bg-input-500/10",
+        borderColor: "border-l-input-500",
+        badgeBg: "bg-input-500",
       };
     case "in_progress":
       return {
-        cardBg: "bg-blue-50",
-        borderColor: "border-l-blue-500",
-        badgeBg: "bg-blue-500",
+        cardBg: "bg-interactive-500/10",
+        borderColor: "border-l-interactive-500",
+        badgeBg: "bg-interactive-500",
       };
     case "drying":
       return {
-        cardBg: "bg-gray-50",
-        borderColor: "border-l-gray-500",
-        badgeBg: "bg-gray-500",
+        cardBg: "bg-neutral-50",
+        borderColor: "border-l-neutral-600",
+        badgeBg: "bg-neutral-600",
       };
     default:
       return {
-        cardBg: "bg-white",
-        borderColor: "border-l-gray-300",
-        badgeBg: "bg-gray-400",
+        cardBg: "bg-neutral-50",
+        borderColor: "border-l-neutral-200",
+        badgeBg: "bg-neutral-600",
       };
   }
 };

@@ -1,15 +1,9 @@
 import { OrderCard } from "@/components/orders/OrderCard";
+import { Box, Spinner, Text, VStack } from "@/components/ui";
 import { useOrders } from "@/hooks/useOrders";
-import {
-  Box,
-  Center,
-  ScrollView,
-  Spinner,
-  Text,
-  VStack,
-} from "@gluestack-ui/themed";
 import { useRouter } from "expo-router";
 import React, { useCallback } from "react";
+import { ScrollView } from "react-native";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -28,29 +22,17 @@ export default function Dashboard() {
 
   if (ordersResponse.status === "error") {
     return (
-      <Center
-        style={{
-          flex: 1,
-          backgroundColor: "var(--earthBg)",
-          paddingHorizontal: 24,
-        }}
-      >
-        <Text
-          style={{
-            color: "var(--redFocus)",
-            textAlign: "center",
-            fontFamily: "Poppins",
-          }}
-        >
+      <Box className="flex-1 bg-primary-50 px-6">
+        <Text className="text-alert-600 text-center font-body">
           Error loading orders: {ordersResponse.error.message}
         </Text>
-      </Center>
+      </Box>
     );
   }
   const { data: orders } = ordersResponse;
 
   return (
-    <Box className="flex-1 bg-gray-50">
+    <Box className="flex-1 bg-primary-50">
       <ScrollView className="flex-1 px-5 py-6">
         <VStack className="space-y-3">
           {orders.map((order) => (
@@ -68,17 +50,9 @@ export default function Dashboard() {
 
 const LoadingState = React.memo(function LoadingState() {
   return (
-    <Center style={{ flex: 1, backgroundColor: "var(--earthBg)" }}>
+    <Box className="flex-1 bg-primary-50">
       <Spinner size="large" />
-      <Text
-        style={{
-          marginTop: 16,
-          color: "var(--stoneText)",
-          fontFamily: "Poppins",
-        }}
-      >
-        Loading orders...
-      </Text>
-    </Center>
+      <Text className="mt-4 text-primary-900 font-body">Loading orders...</Text>
+    </Box>
   );
 });

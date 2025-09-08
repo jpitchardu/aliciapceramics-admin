@@ -1,9 +1,5 @@
-import {
-  Box,
-  HStack,
-  Text,
-  VStack,
-} from "@gluestack-ui/themed";
+import { Box, HStack, Text, VStack } from "@/components/ui";
+import clsx from "clsx";
 import React from "react";
 
 interface InfoCardProps {
@@ -14,44 +10,33 @@ interface InfoCardProps {
   isSpecial?: boolean;
 }
 
-export function InfoCard({ title, content, icon, isLink, isSpecial }: InfoCardProps) {
+export function InfoCard({
+  title,
+  content,
+  icon,
+  isLink,
+  isSpecial,
+}: InfoCardProps) {
   return (
     <Box
-      style={{
-        backgroundColor: "white",
-        borderRadius: 12,
-        padding: 16,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 3,
-        ...(isSpecial && {
-          borderLeftWidth: 4,
-          borderLeftColor: "var(--redFocus)",
-        }),
-      }}
+      className={clsx(
+        "bg-neutral-50 rounded-md p-4 shadow-md",
+        isSpecial && "border-l-4 border-l-alert-600"
+      )}
     >
-      <HStack style={{ alignItems: "flex-start", gap: 12 }}>
-        <Text style={{ fontSize: 18 }}>{icon}</Text>
-        <VStack style={{ flex: 1 }}>
-          <Text
-            style={{
-              fontSize: 14,
-              fontWeight: "600",
-              color: "var(--earthDark)",
-              marginBottom: 4,
-            }}
-          >
+      <HStack className="items-start gap-3">
+        <Text className="text-lg">{icon}</Text>
+        <VStack className="flex-1">
+          <Text className="text-sm font-labelSemibold text-primary-900 mb-1">
             {title}
           </Text>
           <Text
-            style={{
-              fontSize: 14,
-              color: isLink ? "var(--blueBorder)" : "var(--stoneText)",
-              lineHeight: 20,
-              ...(isSpecial && { color: "var(--redFocus)" }),
-            }}
+            className={clsx(
+              "text-sm leading-5",
+              isSpecial && "text-alert-600",
+              isLink && !isSpecial && "text-interactive-500",
+              !isLink && !isSpecial && "text-primary-900"
+            )}
           >
             {content}
           </Text>

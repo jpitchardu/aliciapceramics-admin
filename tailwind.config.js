@@ -15,176 +15,80 @@ module.exports = {
       pattern:
         /(bg|border|text|stroke|fill)-(primary|secondary|tertiary|error|success|warning|info|typography|outline|background|indicator)-(0|50|100|200|300|400|500|600|700|800|900|950|white|gray|black|error|warning|muted|success|info|light|dark|primary)/,
     },
+    // Semantic color patterns
+    {
+      pattern: /(bg|border|text|stroke|fill)-(primary|interactive|input|alert|neutral)-(50|100|200|300|400|500|600|700|800|900)/,
+    },
+    // Legacy brand color patterns
+    {
+      pattern: /(bg|border|text|stroke|fill)-(earthBg|earthForm|earthDark|pinkInput|pinkBorder|pinkHover|blueSelection|blueBorder|blueInfo|redFocus|whiteFocus|stoneDisabled|stoneBorder|stoneText)/,
+    },
   ],
   theme: {
     extend: {
       colors: {
+        // SEMANTIC COLOR SYSTEM - Alicia P Ceramics (EXACT SPECIFICATION ONLY)
+        
+        // PRIMARY (Brown) - Actions & Text
         primary: {
-          0: 'rgb(var(--color-primary-0)/<alpha-value>)',
-          50: 'rgb(var(--color-primary-50)/<alpha-value>)',
-          100: 'rgb(var(--color-primary-100)/<alpha-value>)',
-          200: 'rgb(var(--color-primary-200)/<alpha-value>)',
-          300: 'rgb(var(--color-primary-300)/<alpha-value>)',
-          400: 'rgb(var(--color-primary-400)/<alpha-value>)',
-          500: 'rgb(var(--color-primary-500)/<alpha-value>)',
-          600: 'rgb(var(--color-primary-600)/<alpha-value>)',
-          700: 'rgb(var(--color-primary-700)/<alpha-value>)',
-          800: 'rgb(var(--color-primary-800)/<alpha-value>)',
-          900: 'rgb(var(--color-primary-900)/<alpha-value>)',
-          950: 'rgb(var(--color-primary-950)/<alpha-value>)',
+          50: '#fbfaf9',    // page backgrounds
+          100: '#f0e7da',   // form containers  
+          800: '#2a1100',   // button pressed states
+          900: '#3d1900',   // main text, buttons
         },
-        secondary: {
-          0: 'rgb(var(--color-secondary-0)/<alpha-value>)',
-          50: 'rgb(var(--color-secondary-50)/<alpha-value>)',
-          100: 'rgb(var(--color-secondary-100)/<alpha-value>)',
-          200: 'rgb(var(--color-secondary-200)/<alpha-value>)',
-          300: 'rgb(var(--color-secondary-300)/<alpha-value>)',
-          400: 'rgb(var(--color-secondary-400)/<alpha-value>)',
-          500: 'rgb(var(--color-secondary-500)/<alpha-value>)',
-          600: 'rgb(var(--color-secondary-600)/<alpha-value>)',
-          700: 'rgb(var(--color-secondary-700)/<alpha-value>)',
-          800: 'rgb(var(--color-secondary-800)/<alpha-value>)',
-          900: 'rgb(var(--color-secondary-900)/<alpha-value>)',
-          950: 'rgb(var(--color-secondary-950)/<alpha-value>)',
+
+        // INTERACTIVE (Blue) - Selection & Information
+        interactive: {
+          300: 'rgba(189, 201, 203, 0.3)',   // info backgrounds
+          400: 'rgba(189, 201, 203, 0.4)',   // selection backgrounds
+          500: '#bdc9cb',                     // selection borders
         },
-        tertiary: {
-          50: 'rgb(var(--color-tertiary-50)/<alpha-value>)',
-          100: 'rgb(var(--color-tertiary-100)/<alpha-value>)',
-          200: 'rgb(var(--color-tertiary-200)/<alpha-value>)',
-          300: 'rgb(var(--color-tertiary-300)/<alpha-value>)',
-          400: 'rgb(var(--color-tertiary-400)/<alpha-value>)',
-          500: 'rgb(var(--color-tertiary-500)/<alpha-value>)',
-          600: 'rgb(var(--color-tertiary-600)/<alpha-value>)',
-          700: 'rgb(var(--color-tertiary-700)/<alpha-value>)',
-          800: 'rgb(var(--color-tertiary-800)/<alpha-value>)',
-          900: 'rgb(var(--color-tertiary-900)/<alpha-value>)',
-          950: 'rgb(var(--color-tertiary-950)/<alpha-value>)',
+
+        // INPUT (Pink) - Form States
+        input: {
+          300: 'rgba(225, 175, 161, 0.25)',  // option backgrounds
+          400: 'rgba(225, 175, 161, 0.4)',   // input backgrounds
+          500: '#e1afa1',                     // input borders
         },
-        error: {
-          0: 'rgb(var(--color-error-0)/<alpha-value>)',
-          50: 'rgb(var(--color-error-50)/<alpha-value>)',
-          100: 'rgb(var(--color-error-100)/<alpha-value>)',
-          200: 'rgb(var(--color-error-200)/<alpha-value>)',
-          300: 'rgb(var(--color-error-300)/<alpha-value>)',
-          400: 'rgb(var(--color-error-400)/<alpha-value>)',
-          500: 'rgb(var(--color-error-500)/<alpha-value>)',
-          600: 'rgb(var(--color-error-600)/<alpha-value>)',
-          700: 'rgb(var(--color-error-700)/<alpha-value>)',
-          800: 'rgb(var(--color-error-800)/<alpha-value>)',
-          900: 'rgb(var(--color-error-900)/<alpha-value>)',
-          950: 'rgb(var(--color-error-950)/<alpha-value>)',
+
+        // ALERT (Red) - Focus & Urgency
+        alert: {
+          600: '#d62411',   // required fields, errors
         },
-        success: {
-          0: 'rgb(var(--color-success-0)/<alpha-value>)',
-          50: 'rgb(var(--color-success-50)/<alpha-value>)',
-          100: 'rgb(var(--color-success-100)/<alpha-value>)',
-          200: 'rgb(var(--color-success-200)/<alpha-value>)',
-          300: 'rgb(var(--color-success-300)/<alpha-value>)',
-          400: 'rgb(var(--color-success-400)/<alpha-value>)',
-          500: 'rgb(var(--color-success-500)/<alpha-value>)',
-          600: 'rgb(var(--color-success-600)/<alpha-value>)',
-          700: 'rgb(var(--color-success-700)/<alpha-value>)',
-          800: 'rgb(var(--color-success-800)/<alpha-value>)',
-          900: 'rgb(var(--color-success-900)/<alpha-value>)',
-          950: 'rgb(var(--color-success-950)/<alpha-value>)',
-        },
-        warning: {
-          0: 'rgb(var(--color-warning-0)/<alpha-value>)',
-          50: 'rgb(var(--color-warning-50)/<alpha-value>)',
-          100: 'rgb(var(--color-warning-100)/<alpha-value>)',
-          200: 'rgb(var(--color-warning-200)/<alpha-value>)',
-          300: 'rgb(var(--color-warning-300)/<alpha-value>)',
-          400: 'rgb(var(--color-warning-400)/<alpha-value>)',
-          500: 'rgb(var(--color-warning-500)/<alpha-value>)',
-          600: 'rgb(var(--color-warning-600)/<alpha-value>)',
-          700: 'rgb(var(--color-warning-700)/<alpha-value>)',
-          800: 'rgb(var(--color-warning-800)/<alpha-value>)',
-          900: 'rgb(var(--color-warning-900)/<alpha-value>)',
-          950: 'rgb(var(--color-warning-950)/<alpha-value>)',
-        },
-        info: {
-          0: 'rgb(var(--color-info-0)/<alpha-value>)',
-          50: 'rgb(var(--color-info-50)/<alpha-value>)',
-          100: 'rgb(var(--color-info-100)/<alpha-value>)',
-          200: 'rgb(var(--color-info-200)/<alpha-value>)',
-          300: 'rgb(var(--color-info-300)/<alpha-value>)',
-          400: 'rgb(var(--color-info-400)/<alpha-value>)',
-          500: 'rgb(var(--color-info-500)/<alpha-value>)',
-          600: 'rgb(var(--color-info-600)/<alpha-value>)',
-          700: 'rgb(var(--color-info-700)/<alpha-value>)',
-          800: 'rgb(var(--color-info-800)/<alpha-value>)',
-          900: 'rgb(var(--color-info-900)/<alpha-value>)',
-          950: 'rgb(var(--color-info-950)/<alpha-value>)',
-        },
-        typography: {
-          0: 'rgb(var(--color-typography-0)/<alpha-value>)',
-          50: 'rgb(var(--color-typography-50)/<alpha-value>)',
-          100: 'rgb(var(--color-typography-100)/<alpha-value>)',
-          200: 'rgb(var(--color-typography-200)/<alpha-value>)',
-          300: 'rgb(var(--color-typography-300)/<alpha-value>)',
-          400: 'rgb(var(--color-typography-400)/<alpha-value>)',
-          500: 'rgb(var(--color-typography-500)/<alpha-value>)',
-          600: 'rgb(var(--color-typography-600)/<alpha-value>)',
-          700: 'rgb(var(--color-typography-700)/<alpha-value>)',
-          800: 'rgb(var(--color-typography-800)/<alpha-value>)',
-          900: 'rgb(var(--color-typography-900)/<alpha-value>)',
-          950: 'rgb(var(--color-typography-950)/<alpha-value>)',
-          white: '#FFFFFF',
-          gray: '#D4D4D4',
-          black: '#181718',
-        },
-        outline: {
-          0: 'rgb(var(--color-outline-0)/<alpha-value>)',
-          50: 'rgb(var(--color-outline-50)/<alpha-value>)',
-          100: 'rgb(var(--color-outline-100)/<alpha-value>)',
-          200: 'rgb(var(--color-outline-200)/<alpha-value>)',
-          300: 'rgb(var(--color-outline-300)/<alpha-value>)',
-          400: 'rgb(var(--color-outline-400)/<alpha-value>)',
-          500: 'rgb(var(--color-outline-500)/<alpha-value>)',
-          600: 'rgb(var(--color-outline-600)/<alpha-value>)',
-          700: 'rgb(var(--color-outline-700)/<alpha-value>)',
-          800: 'rgb(var(--color-outline-800)/<alpha-value>)',
-          900: 'rgb(var(--color-outline-900)/<alpha-value>)',
-          950: 'rgb(var(--color-outline-950)/<alpha-value>)',
-        },
-        background: {
-          0: 'rgb(var(--color-background-0)/<alpha-value>)',
-          50: 'rgb(var(--color-background-50)/<alpha-value>)',
-          100: 'rgb(var(--color-background-100)/<alpha-value>)',
-          200: 'rgb(var(--color-background-200)/<alpha-value>)',
-          300: 'rgb(var(--color-background-300)/<alpha-value>)',
-          400: 'rgb(var(--color-background-400)/<alpha-value>)',
-          500: 'rgb(var(--color-background-500)/<alpha-value>)',
-          600: 'rgb(var(--color-background-600)/<alpha-value>)',
-          700: 'rgb(var(--color-background-700)/<alpha-value>)',
-          800: 'rgb(var(--color-background-800)/<alpha-value>)',
-          900: 'rgb(var(--color-background-900)/<alpha-value>)',
-          950: 'rgb(var(--color-background-950)/<alpha-value>)',
-          error: 'rgb(var(--color-background-error)/<alpha-value>)',
-          warning: 'rgb(var(--color-background-warning)/<alpha-value>)',
-          muted: 'rgb(var(--color-background-muted)/<alpha-value>)',
-          success: 'rgb(var(--color-background-success)/<alpha-value>)',
-          info: 'rgb(var(--color-background-info)/<alpha-value>)',
-          light: '#FBFBFB',
-          dark: '#181719',
-        },
-        indicator: {
-          primary: 'rgb(var(--color-indicator-primary)/<alpha-value>)',
-          info: 'rgb(var(--color-indicator-info)/<alpha-value>)',
-          error: 'rgb(var(--color-indicator-error)/<alpha-value>)',
+
+        // NEUTRAL (Gray) - Support
+        neutral: {
+          50: '#ffffff',    // white
+          200: '#e8ecee',   // borders
+          600: '#a4b4b7',   // disabled text
         },
       },
       fontFamily: {
-        heading: undefined,
-        body: undefined,
-        mono: undefined,
+        // Alicia P Ceramics Typography System
+        brand: ['Georgia', 'serif'],          // Brand typography
+        heading: ['Inter', 'sans-serif'],     // Headings
+        label: ['Inter', 'sans-serif'],       // Labels and UI text
+        button: ['Inter', 'sans-serif'],      // Button text
+        body: ['Poppins', 'sans-serif'],      // Body text
+        
+        // Web font variables (if available)
         jakarta: ['var(--font-plus-jakarta-sans)'],
         roboto: ['var(--font-roboto)'],
         code: ['var(--font-source-code-pro)'],
         inter: ['var(--font-inter)'],
         'space-mono': ['var(--font-space-mono)'],
+        poppins: ['var(--font-poppins)'],     // If you have Poppins as web font
+        georgia: ['var(--font-georgia)'],     // If you have Georgia as web font
       },
       fontWeight: {
+        // Alicia P Ceramics Font Weights
+        brandLight: '300',        // Brand typography light weight
+        headingBold: '700',       // Heading bold weight
+        labelSemibold: '600',     // Label and UI semibold
+        buttonSemibold: '600',    // Button semibold
+        bodyRegular: '400',       // Body text regular
+        
+        // Standard weights
         extrablack: '950',
       },
       fontSize: {
