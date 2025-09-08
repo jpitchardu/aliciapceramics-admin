@@ -19,10 +19,6 @@ module.exports = {
     {
       pattern: /(bg|border|text|stroke|fill)-(primary|interactive|input|alert|neutral)-(50|100|200|300|400|500|600|700|800|900)/,
     },
-    // Legacy brand color patterns
-    {
-      pattern: /(bg|border|text|stroke|fill)-(earthBg|earthForm|earthDark|pinkInput|pinkBorder|pinkHover|blueSelection|blueBorder|blueInfo|redFocus|whiteFocus|stoneDisabled|stoneBorder|stoneText)/,
-    },
   ],
   theme: {
     extend: {
