@@ -1,21 +1,20 @@
 import { Stack } from "expo-router";
+import { ThemeProvider } from "@shopify/restyle";
 
-import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
-import { config } from "@/components/ui/gluestack-ui-provider/config";
-import "@/global.css";
+import { theme } from "@/theme";
 
 export default function RootLayout() {
   return (
-    <GluestackUIProvider>
+    <ThemeProvider theme={theme}>
       <Stack>
         <Stack.Screen
           name="index"
           options={{
             headerStyle: {
-              backgroundColor: `rgb(${config.light["--color-primary-50"]})`,
+              backgroundColor: theme.colors.primary50,
             },
             headerTitleStyle: {
-              color: `rgb(${config.light["--color-primary-900"]})`,
+              color: theme.colors.primary900,
             },
           }}
         />
@@ -23,14 +22,14 @@ export default function RootLayout() {
           name="orders/[id]"
           options={{
             headerStyle: {
-              backgroundColor: `rgb(${config.light["--color-primary-50"]})`,
+              backgroundColor: theme.colors.primary50,
             },
             headerTitleStyle: {
-              color: `rgb(${config.light["--color-primary-900"]})`,
+              color: theme.colors.primary900,
             },
           }}
         />
       </Stack>
-    </GluestackUIProvider>
+    </ThemeProvider>
   );
 }

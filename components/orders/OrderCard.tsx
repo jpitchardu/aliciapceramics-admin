@@ -1,7 +1,8 @@
 // components/OrderCard.tsx
-import { Box, HStack, Pressable, Text, VStack } from "@/components/ui";
+import { Box, Text } from "@/components";
 import { Order } from "@/hooks/useOrders";
 import React from "react";
+import { TouchableOpacity } from "react-native";
 
 type OrderCardProps = {
   order: {
@@ -21,27 +22,33 @@ export function OrderCard({ order, onPress }: OrderCardProps) {
   };
 
   return (
-    <Pressable onPress={onCardPress}>
+    <TouchableOpacity onPress={onCardPress}>
       <Box
-        className={`${statusStyles.cardBg} rounded-xl p-4 border-l-4 ${statusStyles.borderColor} border-2 border-transparent`}
+        backgroundColor={statusStyles.cardBg}
+        borderRadius="xl"
+        padding="m"
+        borderLeftWidth={4}
+        borderLeftColor={statusStyles.borderColor}
+        borderWidth={2}
+        borderColor="primary50"
       >
-        <VStack className="space-y-1">
-          <HStack className="justify-between items-start">
-            <Text className="text-lg font-semibold text-primary-900">
+        <Box gap="xs">
+          <Box flexDirection="row" justifyContent="space-between" alignItems="flex-start">
+            <Text variant="heading">
               {order.customers?.name || "Unknown Customer"}
             </Text>
-            <Box className={`${statusStyles.badgeBg} px-3 py-1 rounded-lg`}>
-              <Text className="text-xs font-semibold text-white uppercase">
+            <Box backgroundColor={statusStyles.badgeBg} paddingHorizontal="s" paddingVertical="xs" borderRadius="s">
+              <Text variant="label" color="neutral50">
                 {order.status}
               </Text>
             </Box>
-          </HStack>
-          <Text className="text-sm text-primary-900 opacity-80">
+          </Box>
+          <Text variant="body">
             {buildOrderSummary(order.order_details)}
           </Text>
-        </VStack>
+        </Box>
       </Box>
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
@@ -68,33 +75,33 @@ const getStatusStyles = (status: string | null) => {
   switch (status) {
     case "unread_messages":
       return {
-        cardBg: "bg-alert-600/10",
-        borderColor: "border-l-alert-600",
-        badgeBg: "bg-alert-600",
+        cardBg: "primary100" as const,
+        borderColor: "alert600" as const,
+        badgeBg: "alert600" as const,
       };
     case "ready_to_work":
       return {
-        cardBg: "bg-input-500/10",
-        borderColor: "border-l-input-500",
-        badgeBg: "bg-input-500",
+        cardBg: "input300" as const,
+        borderColor: "input500" as const,
+        badgeBg: "input500" as const,
       };
     case "in_progress":
       return {
-        cardBg: "bg-interactive-500/10",
-        borderColor: "border-l-interactive-500",
-        badgeBg: "bg-interactive-500",
+        cardBg: "interactive300" as const,
+        borderColor: "interactive500" as const,
+        badgeBg: "interactive500" as const,
       };
     case "drying":
       return {
-        cardBg: "bg-neutral-50",
-        borderColor: "border-l-neutral-600",
-        badgeBg: "bg-neutral-600",
+        cardBg: "neutral50" as const,
+        borderColor: "neutral600" as const,
+        badgeBg: "neutral600" as const,
       };
     default:
       return {
-        cardBg: "bg-neutral-50",
-        borderColor: "border-l-neutral-200",
-        badgeBg: "bg-neutral-600",
+        cardBg: "neutral50" as const,
+        borderColor: "neutral200" as const,
+        badgeBg: "neutral600" as const,
       };
   }
 };

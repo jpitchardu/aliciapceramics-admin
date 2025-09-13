@@ -3,13 +3,7 @@ module.exports = function (api) {
 
   return {
     presets: [
-      [
-        'babel-preset-expo',
-        {
-          jsxImportSource: 'nativewind',
-        },
-      ],
-      'nativewind/babel',
+      'babel-preset-expo',
     ],
 
     plugins: [
@@ -20,7 +14,6 @@ module.exports = function (api) {
 
           alias: {
             '@': './',
-            'tailwind.config': './tailwind.config.js',
           },
         },
       ],

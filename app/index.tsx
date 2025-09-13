@@ -1,9 +1,9 @@
 import { OrderCard } from "@/components/orders/OrderCard";
-import { Box, Spinner, Text, VStack } from "@/components/ui";
+import { Box, Text } from "@/components";
 import { useOrders } from "@/hooks/useOrders";
 import { useRouter } from "expo-router";
 import { memo, useCallback } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, ActivityIndicator } from "react-native";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -22,8 +22,8 @@ export default function Dashboard() {
 
   if (ordersResponse.status === "error") {
     return (
-      <Box className="flex-1 bg-primary-50 px-6">
-        <Text className="text-alert-600 text-center font-body">
+      <Box flex={1} backgroundColor="primary50" paddingHorizontal="l">
+        <Text variant="body" color="alert600" textAlign="center">
           Error loading orders: {ordersResponse.error.message}
         </Text>
       </Box>
@@ -32,9 +32,9 @@ export default function Dashboard() {
   const { data: orders } = ordersResponse;
 
   return (
-    <Box className="flex-1 bg-primary-50">
-      <ScrollView className="flex-1 px-5 py-6">
-        <VStack className="space-y-3">
+    <Box flex={1} backgroundColor="primary50">
+      <ScrollView style={{ flex: 1 }}>
+        <Box padding="m" gap="m">
           {orders.map((order) => (
             <OrderCard
               order={order}
@@ -42,7 +42,7 @@ export default function Dashboard() {
               onPress={onOrderItemPress}
             />
           ))}
-        </VStack>
+        </Box>
       </ScrollView>
     </Box>
   );
@@ -50,9 +50,9 @@ export default function Dashboard() {
 
 const LoadingState = memo(function LoadingState() {
   return (
-    <Box className="flex-1 bg-primary-50">
-      <Spinner size="large" />
-      <Text className="mt-4 text-primary-900 font-body">Loading orders...</Text>
+    <Box flex={1} backgroundColor="primary50" justifyContent="center" alignItems="center">
+      <ActivityIndicator size="large" color="#3d1900" />
+      <Text variant="body" marginTop="m">Loading orders...</Text>
     </Box>
   );
 });

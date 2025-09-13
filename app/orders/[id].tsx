@@ -1,15 +1,11 @@
 import { PieceAccordion } from "@/components/orders/PieceAccordion";
-import { Box } from "@/components/ui/box";
-import { config } from "@/components/ui/gluestack-ui-provider/config";
-import { HStack } from "@/components/ui/hstack";
-import { Spinner } from "@/components/ui/spinner";
-import { Text } from "@/components/ui/text";
-import { VStack } from "@/components/ui/vstack";
+import { Box, Text } from "@/components";
+import { theme } from "@/theme";
 import { useOrderDetail } from "@/hooks/useOrderDetail";
 import * as Clipboard from "expo-clipboard";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect } from "react";
-import { Linking, TouchableOpacity, View } from "react-native";
+import { Linking, TouchableOpacity, ActivityIndicator } from "react-native";
 
 export default function OrderDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -24,11 +20,11 @@ export default function OrderDetail() {
       navigation.setOptions({
         title: order.customers.name,
         headerStyle: {
-          backgroundColor: `rgb(${config.light["--color-primary-100"]})`,
+          backgroundColor: theme.colors.primary100,
         },
         headerRight: () => (
-          <Box className="bg-interactive-500 px-3 py-1 rounded-lg">
-            <Text className="text-neutral-50 text-xs font-medium">
+          <Box backgroundColor="interactive500" paddingHorizontal="s" paddingVertical="xs" borderRadius="s">
+            <Text variant="label" color="neutral50">
               {statusStyles.label}
             </Text>
           </Box>
@@ -47,16 +43,16 @@ export default function OrderDetail() {
 
   if (orderResponse.status === "loading") {
     return (
-      <Box className="flex-1 justify-center items-center bg-primary-50">
-        <Spinner size="large" />
+      <Box flex={1} justifyContent="center" alignItems="center" backgroundColor="primary50">
+        <ActivityIndicator size="large" color={theme.colors.primary900} />
       </Box>
     );
   }
 
   if (orderResponse.status === "error") {
     return (
-      <Box className="flex-1 justify-center items-center bg-primary-50 p-5">
-        <Text className="text-alert-600 text-center">
+      <Box flex={1} justifyContent="center" alignItems="center" backgroundColor="primary50" padding="m">
+        <Text variant="body" color="alert600" textAlign="center">
           {orderResponse.error.message}
         </Text>
       </Box>
@@ -93,68 +89,61 @@ export default function OrderDetail() {
   };
 
   return (
-    <View className="flex-1 bg-primary-50">
-      <VStack className="p-5 gap-6">
-        <VStack className="gap-3">
-          <Text className="text-sm font-labelSemibold text-primary-900 uppercase tracking-wider">
+    <Box flex={1} backgroundColor="primary50">
+      <Box padding="m" gap="l">
+        <Box gap="s">
+          <Text variant="label">
             Pieces ({order.order_details.length})
           </Text>
-          <VStack className="gap-2">
+          <Box gap="s">
             {order.order_details.map((detail) => (
               <PieceAccordion key={detail.id} piece={detail} />
             ))}
-          </VStack>
-        </VStack>
+          </Box>
+        </Box>
 
-        <VStack className="gap-4">
-          <Text className="text-sm font-labelSemibold text-primary-900 uppercase tracking-wider">
-            Timeline
-          </Text>
-          <Box className="bg-interactive-400/40 px-3 py-1 rounded-md self-start">
-            <Text className="text-sm font-medium text-primary-900">
+        <Box gap="m">
+          <Text variant="label">Timeline</Text>
+          <Box backgroundColor="interactive400" paddingHorizontal="s" paddingVertical="xs" borderRadius="s" alignSelf="flex-start">
+            <Text variant="body">
               {order.timeline}
             </Text>
           </Box>
-          <Text className="text-sm font-labelSemibold text-primary-900 uppercase tracking-wider">
-            Inspiration
-          </Text>
-          <Text className="text-sm text-primary-900 leading-5">
+
+          <Text variant="label">Inspiration</Text>
+          <Text variant="body">
             {order.inspiration}
           </Text>
 
-          <Text className="text-sm font-labelSemibold text-primary-900 uppercase tracking-wider">
-            Special Considerations
-          </Text>
-          <Text className="text-sm text-primary-900 leading-5">
+          <Text variant="label">Special Considerations</Text>
+          <Text variant="body">
             {order.special_considerations}
           </Text>
 
-          <VStack className="gap-2">
-            <Text className="text-sm font-labelSemibold text-primary-900 uppercase tracking-wider">
-              Customer
-            </Text>
+          <Box gap="s">
+            <Text variant="label">Customer</Text>
             <TouchableOpacity
               onPress={openMessagesApp}
               onLongPress={copyPhoneToClipboard}
             >
-              <HStack className="items-start gap-3">
-                <VStack className="flex-1 gap-1">
-                  <Text className="text-sm font-medium text-primary-900">
+              <Box flexDirection="row" alignItems="flex-start" gap="s">
+                <Box flex={1} gap="xs">
+                  <Text variant="body">
                     {order.customers.name}
                   </Text>
-                  <Text className="text-sm text-primary-900">
+                  <Text variant="body">
                     {order.customers.email}
                   </Text>
-                  <Text className="text-sm text-primary-900">
+                  <Text variant="body">
                     {order.customers.phone}
                   </Text>
-                </VStack>
-              </HStack>
+                </Box>
+              </Box>
             </TouchableOpacity>
-          </VStack>
-        </VStack>
-      </VStack>
-    </View>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 

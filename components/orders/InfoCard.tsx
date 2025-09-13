@@ -1,5 +1,4 @@
-import { Box, HStack, Text, VStack } from "@/components/ui";
-import clsx from "clsx";
+import { Box, Text } from "@/components";
 import React from "react";
 
 interface InfoCardProps {
@@ -17,31 +16,37 @@ export function InfoCard({
   isLink,
   isSpecial,
 }: InfoCardProps) {
+  const getTextColor = () => {
+    if (isSpecial) return "alert600";
+    if (isLink && !isSpecial) return "interactive500";
+    return "primary900";
+  };
+
   return (
     <Box
-      className={clsx(
-        "bg-neutral-50 rounded-md p-4 shadow-md",
-        isSpecial && "border-l-4 border-l-alert-600"
-      )}
+      backgroundColor="neutral50"
+      borderRadius="m"
+      padding="m"
+      borderLeftWidth={isSpecial ? 4 : 0}
+      borderLeftColor={isSpecial ? "alert600" : undefined}
+      shadowOpacity={0.1}
+      shadowRadius={2}
+      shadowOffset={{ width: 0, height: 1 }}
     >
-      <HStack className="items-start gap-3">
-        <Text className="text-lg">{icon}</Text>
-        <VStack className="flex-1">
-          <Text className="text-sm font-labelSemibold text-primary-900 mb-1">
+      <Box flexDirection="row" alignItems="flex-start" gap="s">
+        <Text variant="body">{icon}</Text>
+        <Box flex={1}>
+          <Text variant="label" marginBottom="xs">
             {title}
           </Text>
           <Text
-            className={clsx(
-              "text-sm leading-5",
-              isSpecial && "text-alert-600",
-              isLink && !isSpecial && "text-interactive-500",
-              !isLink && !isSpecial && "text-primary-900"
-            )}
+            variant="body"
+            color={getTextColor()}
           >
             {content}
           </Text>
-        </VStack>
-      </HStack>
+        </Box>
+      </Box>
     </Box>
   );
 }
