@@ -14,8 +14,94 @@ export type Database = {
   }
   public: {
     Tables: {
+      conversations: {
+        Row: {
+          created_at: string | null
+          customer_phone: string
+          id: string
+          order_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          customer_phone: string
+          id?: string
+          order_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          customer_phone?: string
+          id?: string
+          order_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: true
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customer_sms_consent_records: {
+        Row: {
+          consent_given: boolean
+          consent_language: string
+          consent_method: string
+          consent_timestamp: string
+          consent_type: string
+          created_at: string
+          customer_id: string
+          id: string
+          ip_address: unknown | null
+          phone_number: string
+          revocation_method: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          consent_given: boolean
+          consent_language: string
+          consent_method?: string
+          consent_timestamp?: string
+          consent_type: string
+          created_at?: string
+          customer_id: string
+          id?: string
+          ip_address?: unknown | null
+          phone_number: string
+          revocation_method?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          consent_given?: boolean
+          consent_language?: string
+          consent_method?: string
+          consent_timestamp?: string
+          consent_type?: string
+          created_at?: string
+          customer_id?: string
+          id?: string
+          ip_address?: unknown | null
+          phone_number?: string
+          revocation_method?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_sms_consent_records_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customers: {
         Row: {
+          communication_preferences: string | null
           created_at: string | null
           email: string
           id: string
@@ -24,6 +110,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          communication_preferences?: string | null
           created_at?: string | null
           email: string
           id?: string
@@ -32,6 +119,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          communication_preferences?: string | null
           created_at?: string | null
           email?: string
           id?: string
@@ -41,6 +129,47 @@ export type Database = {
         }
         Relationships: []
       }
+      messages: {
+        Row: {
+          body: string
+          conversation_id: string
+          created_at: string | null
+          direction: string
+          id: string
+          read_at: string | null
+          twilio_message_sid: string | null
+          twilio_status: string | null
+        }
+        Insert: {
+          body: string
+          conversation_id: string
+          created_at?: string | null
+          direction: string
+          id?: string
+          read_at?: string | null
+          twilio_message_sid?: string | null
+          twilio_status?: string | null
+        }
+        Update: {
+          body?: string
+          conversation_id?: string
+          created_at?: string | null
+          direction?: string
+          id?: string
+          read_at?: string | null
+          twilio_message_sid?: string | null
+          twilio_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_details: {
         Row: {
           created_at: string | null
@@ -48,7 +177,7 @@ export type Database = {
           id: string
           order_id: string | null
           quantity: number
-          size: number | null
+          size: string | null
           type: string
         }
         Insert: {
@@ -57,7 +186,7 @@ export type Database = {
           id?: string
           order_id?: string | null
           quantity: number
-          size?: number | null
+          size?: string | null
           type: string
         }
         Update: {
@@ -66,7 +195,7 @@ export type Database = {
           id?: string
           order_id?: string | null
           quantity?: number
-          size?: number | null
+          size?: string | null
           type?: string
         }
         Relationships: [
@@ -119,9 +248,11 @@ export type Database = {
           customer_id: string
           id: string
           inspiration: string
+          last_message_at: string | null
           special_considerations: string | null
           status: string | null
           timeline: string
+          unread_count: number | null
           updated_at: string | null
         }
         Insert: {
@@ -131,9 +262,11 @@ export type Database = {
           customer_id: string
           id?: string
           inspiration: string
+          last_message_at?: string | null
           special_considerations?: string | null
           status?: string | null
           timeline: string
+          unread_count?: number | null
           updated_at?: string | null
         }
         Update: {
@@ -143,9 +276,11 @@ export type Database = {
           customer_id?: string
           id?: string
           inspiration?: string
+          last_message_at?: string | null
           special_considerations?: string | null
           status?: string | null
           timeline?: string
+          unread_count?: number | null
           updated_at?: string | null
         }
         Relationships: [
@@ -157,6 +292,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      webhook_events: {
+        Row: {
+          created_at: string | null
+          error_message: string | null
+          event_type: string
+          id: string
+          payload: Json
+          processed_at: string | null
+          twilio_message_sid: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          error_message?: string | null
+          event_type: string
+          id?: string
+          payload: Json
+          processed_at?: string | null
+          twilio_message_sid?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          error_message?: string | null
+          event_type?: string
+          id?: string
+          payload?: Json
+          processed_at?: string | null
+          twilio_message_sid?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {
