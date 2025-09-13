@@ -6,9 +6,10 @@ import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useOrderDetail } from "@/hooks/useOrderDetail";
+import * as Clipboard from "expo-clipboard";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect } from "react";
-import { View } from "react-native";
+import { Linking, TouchableOpacity, View } from "react-native";
 
 export default function OrderDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -64,6 +65,33 @@ export default function OrderDetail() {
 
   const { data: order } = orderResponse;
 
+  const openMessagesApp = () => {
+    if (order.customers.phone) {
+      const phoneNumber = order.customers.phone.replace(/[^+0-9]/g, "");
+
+      const piecesSummary = order.order_details
+        .map((detail) => {
+          return `${detail.quantity}x ${detail.type}${
+            detail.size ? ` (${detail.size} oz)` : ""
+          }`;
+        })
+        .join("\n");
+
+      const defaultMessage = `Hi ${order.customers.name}, this is Alicia from aliciapceramics, thank you for submitting a commission request!\n\nBefore moving forward I just wanted to confirm your order of:\n\n${piecesSummary}\n\nWith your preferred delivery date of: ${order.timeline}\n\nDoes that sound right?`;
+
+      const smsUrl = `sms:${phoneNumber}?body=${encodeURIComponent(
+        defaultMessage
+      )}`;
+      Linking.openURL(smsUrl);
+    }
+  };
+
+  const copyPhoneToClipboard = () => {
+    if (order.customers.phone) {
+      Clipboard.setStringAsync(order.customers.phone);
+    }
+  };
+
   return (
     <View className="flex-1 bg-primary-50">
       <VStack className="p-5 gap-6">
@@ -105,19 +133,24 @@ export default function OrderDetail() {
             <Text className="text-sm font-labelSemibold text-primary-900 uppercase tracking-wider">
               Customer
             </Text>
-            <HStack className="items-start gap-3">
-              <VStack className="flex-1 gap-1">
-                <Text className="text-sm font-medium text-primary-900">
-                  {order.customers.name}
-                </Text>
-                <Text className="text-sm text-primary-900">
-                  {order.customers.email}
-                </Text>
-                <Text className="text-sm text-primary-900">
-                  {order.customers.phone}
-                </Text>
-              </VStack>
-            </HStack>
+            <TouchableOpacity
+              onPress={openMessagesApp}
+              onLongPress={copyPhoneToClipboard}
+            >
+              <HStack className="items-start gap-3">
+                <VStack className="flex-1 gap-1">
+                  <Text className="text-sm font-medium text-primary-900">
+                    {order.customers.name}
+                  </Text>
+                  <Text className="text-sm text-primary-900">
+                    {order.customers.email}
+                  </Text>
+                  <Text className="text-sm text-primary-900">
+                    {order.customers.phone}
+                  </Text>
+                </VStack>
+              </HStack>
+            </TouchableOpacity>
           </VStack>
         </VStack>
       </VStack>
