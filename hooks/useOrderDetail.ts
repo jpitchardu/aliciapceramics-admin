@@ -36,8 +36,6 @@ export function useOrderDetail(orderId: string | undefined): OrderDetailResponse
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<PostgrestError | undefined>(undefined);
 
-  const client = getAliciapCeramicsSubaseClient();
-
   useEffect(() => {
     if (!orderId) {
       setLoading(false);
@@ -48,7 +46,8 @@ export function useOrderDetail(orderId: string | undefined): OrderDetailResponse
     const fetchOrder = async () => {
       setLoading(true);
       setError(undefined);
-      
+
+      const client = getAliciapCeramicsSubaseClient();
       const { data, error } = await client
         .from("orders")
         .select(`
@@ -70,7 +69,7 @@ export function useOrderDetail(orderId: string | undefined): OrderDetailResponse
     };
 
     fetchOrder();
-  }, [client, orderId]);
+  }, [orderId]);
 
   if (loading) return { status: "loading", data: undefined, error: undefined };
   if (error) return { status: "error", error, data: undefined };

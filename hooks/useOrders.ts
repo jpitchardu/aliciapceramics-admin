@@ -35,21 +35,21 @@ export function useOrders(): OrdersResponse {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<PostgrestError>();
 
-  const client = getAliciapCeramicsSubaseClient();
-
   useEffect(() => {
+    const client = getAliciapCeramicsSubaseClient();
+
     client
       .from("orders")
       .select(
         `
-      id, 
+      id,
       status,
       customers (
         name
       ),
       order_details (
-        id, 
-        quantity, 
+        id,
+        quantity,
         type
       )
     `
@@ -62,7 +62,7 @@ export function useOrders(): OrdersResponse {
 
         setData(data);
       });
-  }, [client]);
+  }, []);
 
   if (loading) return { status: "loading", data: undefined, error: undefined };
   if (error) return { status: "error", error, data: undefined };

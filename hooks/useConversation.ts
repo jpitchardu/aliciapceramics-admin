@@ -42,8 +42,6 @@ export function useConversation(orderId: string | undefined): ConversationRespon
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<PostgrestError | undefined>(undefined);
 
-  const client = getAliciapCeramicsSubaseClient();
-
   const fetchConversation = useCallback(async () => {
     if (!orderId) {
       setLoading(false);
@@ -54,6 +52,7 @@ export function useConversation(orderId: string | undefined): ConversationRespon
     setLoading(true);
     setError(undefined);
 
+    const client = getAliciapCeramicsSubaseClient();
     const { data, error } = await client
       .from("conversations")
       .select(`
@@ -75,11 +74,11 @@ export function useConversation(orderId: string | undefined): ConversationRespon
     }
 
     setData(data as ConversationWithMessages);
-  }, [client, orderId]);
+  }, [orderId]);
 
   useEffect(() => {
     fetchConversation();
-  }, [client, fetchConversation, orderId]);
+  }, [fetchConversation]);
 
   const refresh = async () => {
     await fetchConversation();
