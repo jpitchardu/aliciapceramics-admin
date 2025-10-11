@@ -27,12 +27,8 @@ export function MessagingInterface({
   }, [conversation]);
 
   const handleMessageSent = async () => {
-    // Refresh the conversation to show the new message
     await refresh();
-    // Small delay to ensure the new message is rendered before scrolling
-    setTimeout(() => {
-      // The ConversationView will handle scrolling to bottom
-    }, 100);
+    setTimeout(() => {}, 100);
   };
 
   if (status === "loading") {

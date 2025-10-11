@@ -1,25 +1,26 @@
-import React, { useRef, useEffect } from 'react'
-import { FlatList } from 'react-native'
-import { Box, Text } from '@/components'
-import { ConversationWithMessages } from '@/hooks/useConversation'
-import { MessageBubble } from './MessageBubble'
+import { useRef, useEffect } from "react";
+import { FlatList } from "react-native";
+import { Box, Text } from "@/components";
+import { ConversationWithMessages } from "@/hooks/useConversation";
+import { MessageBubble } from "./MessageBubble";
 
 type ConversationViewProps = {
-  conversation: ConversationWithMessages
-}
+  conversation: ConversationWithMessages;
+};
 
 export function ConversationView({ conversation }: ConversationViewProps) {
-  const flatListRef = useRef<FlatList>(null)
+  const flatListRef = useRef<FlatList>(null);
   const sortedMessages = [...conversation.messages].sort(
-    (a, b) => new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime()
-  )
+    (a, b) =>
+      new Date(a.created_at || 0).getTime() -
+      new Date(b.created_at || 0).getTime()
+  );
 
   useEffect(() => {
-    // Scroll to bottom when new messages are added
     if (sortedMessages.length > 0) {
-      flatListRef.current?.scrollToEnd({ animated: true })
+      flatListRef.current?.scrollToEnd({ animated: true });
     }
-  }, [sortedMessages.length])
+  }, [sortedMessages.length]);
 
   if (sortedMessages.length === 0) {
     return (
@@ -28,7 +29,7 @@ export function ConversationView({ conversation }: ConversationViewProps) {
           No messages yet. Start a conversation with the customer!
         </Text>
       </Box>
-    )
+    );
   }
 
   return (
@@ -47,5 +48,5 @@ export function ConversationView({ conversation }: ConversationViewProps) {
         keyboardShouldPersistTaps="handled"
       />
     </Box>
-  )
+  );
 }
