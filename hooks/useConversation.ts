@@ -37,15 +37,15 @@ export type ConversationResponse =
   | ErrorConversationResponse
   | NoConversationResponse;
 
-export function useConversation(orderId: string | undefined): ConversationResponse & { refresh: () => Promise<void> } {
+export function useConversation(customerId: string | undefined): ConversationResponse & { refresh: () => Promise<void> } {
   const [data, setData] = useState<ConversationWithMessages | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<PostgrestError | undefined>(undefined);
 
   const fetchConversation = useCallback(async () => {
-    if (!orderId) {
+    if (!customerId) {
       setLoading(false);
-      setError({ message: "Order ID is required", code: "MISSING_ID", hint: "", details: "" } as PostgrestError);
+      setError({ message: "Customer ID is required", code: "MISSING_ID", hint: "", details: "" } as PostgrestError);
       return;
     }
 
@@ -59,7 +59,7 @@ export function useConversation(orderId: string | undefined): ConversationRespon
         *,
         messages (*)
       `)
-      .eq("order_id", orderId)
+      .eq("customer_id", customerId)
       .order("created_at", { ascending: true, referencedTable: "messages" })
       .single();
 
@@ -74,7 +74,7 @@ export function useConversation(orderId: string | undefined): ConversationRespon
     }
 
     setData(data as ConversationWithMessages);
-  }, [orderId]);
+  }, [customerId]);
 
   useEffect(() => {
     fetchConversation();
