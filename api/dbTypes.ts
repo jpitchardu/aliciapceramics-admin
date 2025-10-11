@@ -17,31 +17,31 @@ export type Database = {
       conversations: {
         Row: {
           created_at: string | null
+          customer_id: string
           customer_phone: string
           id: string
-          order_id: string
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
+          customer_id: string
           customer_phone: string
           id?: string
-          order_id: string
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
+          customer_id?: string
           customer_phone?: string
           id?: string
-          order_id?: string
           updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "conversations_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: true
-            referencedRelation: "orders"
+            foreignKeyName: "conversations_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
             referencedColumns: ["id"]
           },
         ]
@@ -133,7 +133,7 @@ export type Database = {
         Row: {
           body: string
           conversation_id: string
-          created_at: string | null
+          created_at: string
           direction: string
           id: string
           read_at: string | null
@@ -143,7 +143,7 @@ export type Database = {
         Insert: {
           body: string
           conversation_id: string
-          created_at?: string | null
+          created_at?: string
           direction: string
           id?: string
           read_at?: string | null
@@ -153,7 +153,7 @@ export type Database = {
         Update: {
           body?: string
           conversation_id?: string
-          created_at?: string | null
+          created_at?: string
           direction?: string
           id?: string
           read_at?: string | null
@@ -167,6 +167,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "conversations"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations_with_unread_messages"
+            referencedColumns: ["conversation_id"]
           },
         ]
       }
@@ -251,6 +258,7 @@ export type Database = {
           last_message_at: string | null
           special_considerations: string | null
           status: string | null
+          status_updated_at: string | null
           timeline: string
           unread_count: number | null
           updated_at: string | null
@@ -265,6 +273,7 @@ export type Database = {
           last_message_at?: string | null
           special_considerations?: string | null
           status?: string | null
+          status_updated_at?: string | null
           timeline: string
           unread_count?: number | null
           updated_at?: string | null
@@ -279,6 +288,7 @@ export type Database = {
           last_message_at?: string | null
           special_considerations?: string | null
           status?: string | null
+          status_updated_at?: string | null
           timeline?: string
           unread_count?: number | null
           updated_at?: string | null
@@ -292,6 +302,81 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      task_order_details: {
+        Row: {
+          created_at: string | null
+          order_detail_id: string
+          task_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          order_detail_id: string
+          task_id: string
+        }
+        Update: {
+          created_at?: string | null
+          order_detail_id?: string
+          task_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_order_details_order_detail_id_fkey"
+            columns: ["order_detail_id"]
+            isOneToOne: false
+            referencedRelation: "order_details"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_order_details_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tasks: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          needs_photo: boolean | null
+          piece_count: number
+          scheduled_date: string
+          snoozed_until: string | null
+          status: string | null
+          task_type: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          needs_photo?: boolean | null
+          piece_count: number
+          scheduled_date: string
+          snoozed_until?: string | null
+          status?: string | null
+          task_type: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          needs_photo?: boolean | null
+          piece_count?: number
+          scheduled_date?: string
+          snoozed_until?: string | null
+          status?: string | null
+          task_type?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       webhook_events: {
         Row: {
@@ -325,7 +410,26 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      conversations_with_unread_messages: {
+        Row: {
+          conversation_id: string | null
+          customer_email: string | null
+          customer_id: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          last_message_at: string | null
+          unread_count: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never
