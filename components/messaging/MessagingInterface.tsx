@@ -1,23 +1,25 @@
-import React, { useEffect, useRef } from "react";
-import { ActivityIndicator } from "react-native";
 import { Box, Text } from "@/components";
 import { useConversation } from "@/hooks/useConversation";
+import { useEffect, useRef } from "react";
+import { ActivityIndicator } from "react-native";
 import { ConversationView } from "./ConversationView";
 import { MessageComposer } from "./MessageComposer";
 
 type MessagingInterfaceProps = {
   customerId: string;
+  orderId: string;
 };
 
 export function MessagingInterface({
-  customerId: orderId,
+  customerId,
+  orderId,
 }: MessagingInterfaceProps) {
   const {
     status,
     data: conversation,
     error,
     refresh,
-  } = useConversation(orderId);
+  } = useConversation(customerId);
   const conversationRef = useRef(conversation);
 
   useEffect(() => {

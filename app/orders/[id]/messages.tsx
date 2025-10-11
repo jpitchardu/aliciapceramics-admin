@@ -1,14 +1,14 @@
+import { Box, Text } from "@/components";
+import { MessagingInterface } from "@/components/messaging/MessagingInterface";
+import { useOrderDetail } from "@/hooks/useOrderDetail";
+import { theme } from "@/theme";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect } from "react";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { Box, Text } from "@/components";
-import { MessagingInterface } from "@/components/messaging/MessagingInterface";
-import { useOrderDetail } from "@/hooks/useOrderDetail";
-import { useLocalSearchParams, useNavigation } from "expo-router";
-import { theme } from "@/theme";
 
 export default function MessagesScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -83,7 +83,7 @@ export default function MessagesScreen() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
     >
-      <MessagingInterface customerId={order.customer_id} />
+      <MessagingInterface customerId={order.customer_id} orderId={order.id} />
     </KeyboardAvoidingView>
   );
 }
