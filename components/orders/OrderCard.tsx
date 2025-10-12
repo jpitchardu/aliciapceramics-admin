@@ -1,7 +1,6 @@
 // components/OrderCard.tsx
 import { Box, Text } from "@/components";
 import { Order } from "@/hooks/useOrders";
-import React from "react";
 import { TouchableOpacity } from "react-native";
 
 type OrderCardProps = {
@@ -33,19 +32,26 @@ export function OrderCard({ order, onPress }: OrderCardProps) {
         borderColor="primary50"
       >
         <Box gap="xs">
-          <Box flexDirection="row" justifyContent="space-between" alignItems="flex-start">
+          <Box
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="flex-start"
+          >
             <Text variant="heading">
               {order.customers?.name || "Unknown Customer"}
             </Text>
-            <Box backgroundColor={statusStyles.badgeBg} paddingHorizontal="s" paddingVertical="xs" borderRadius="s">
+            <Box
+              backgroundColor={statusStyles.badgeBg}
+              paddingHorizontal="s"
+              paddingVertical="xs"
+              borderRadius="s"
+            >
               <Text variant="label" color="neutral50">
                 {order.status}
               </Text>
             </Box>
           </Box>
-          <Text variant="body">
-            {buildOrderSummary(order.order_details)}
-          </Text>
+          <Text variant="body">{buildOrderSummary(order.order_details)}</Text>
         </Box>
       </Box>
     </TouchableOpacity>

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Box, Text } from "@/components";
 import { Tables } from "@/api/dbTypes";
 
@@ -5,8 +6,8 @@ type MessageBubbleProps = {
   message: Tables<"messages">;
 };
 
-export function MessageBubble({ message }: MessageBubbleProps) {
-  const isOutbound = message.direction === "outbound";
+export const MessageBubble = memo(function MessageBubble({ message }: MessageBubbleProps) {
+  const isOutbound = message.direction.trim() === "outbound";
 
   return (
     <Box
@@ -42,4 +43,4 @@ export function MessageBubble({ message }: MessageBubbleProps) {
       </Box>
     </Box>
   );
-}
+});

@@ -1,6 +1,6 @@
 import { Box, Text } from "@/components";
 import { useConversation } from "@/hooks/useConversation";
-import { useEffect, useRef } from "react";
+import { useCallback } from "react";
 import { ActivityIndicator } from "react-native";
 import { ConversationView } from "./ConversationView";
 import { MessageComposer } from "./MessageComposer";
@@ -15,23 +15,19 @@ export function MessagingInterface({
   orderId,
 }: MessagingInterfaceProps) {
   const {
-    status,
     data: conversation,
     error,
-    refresh,
+    isLoading,
+    refetch,
   } = useConversation(customerId);
-  const conversationRef = useRef(conversation);
 
-  useEffect(() => {
-    conversationRef.current = conversation;
-  }, [conversation]);
+  const handleMessageSent = useCallback(async () => {
+    if (!conversation) {
+      await refetch();
+    }
+  }, [conversation, refetch]);
 
-  const handleMessageSent = async () => {
-    await refresh();
-    setTimeout(() => {}, 100);
-  };
-
-  if (status === "loading") {
+  if (isLoading) {
     return (
       <Box
         flex={1}
@@ -47,7 +43,7 @@ export function MessagingInterface({
     );
   }
 
-  if (status === "error") {
+  if (error) {
     return (
       <Box
         flex={1}
@@ -71,7 +67,7 @@ export function MessagingInterface({
     );
   }
 
-  if (status === "no_conversation") {
+  if (!conversation) {
     return (
       <Box flex={1} backgroundColor="primary50">
         <Box flex={1} justifyContent="center" alignItems="center" padding="l">
@@ -93,7 +89,7 @@ export function MessagingInterface({
   return (
     <Box flex={1} backgroundColor="primary50">
       <Box flex={1}>
-        <ConversationView conversation={conversation} />
+        <ConversationView conversationId={conversation.id} />
       </Box>
       <MessageComposer orderId={orderId} onMessageSent={handleMessageSent} />
     </Box>

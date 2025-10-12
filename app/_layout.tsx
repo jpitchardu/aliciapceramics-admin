@@ -1,12 +1,15 @@
 import { Stack } from "expo-router";
 import { ThemeProvider } from "@shopify/restyle";
+import { QueryClientProvider } from "@tanstack/react-query";
 
 import { theme } from "@/theme";
+import { queryClient } from "@/api/queryClient";
 
 export default function RootLayout() {
   return (
-    <ThemeProvider theme={theme}>
-      <Stack>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <Stack>
         <Stack.Screen
           name="index"
           options={{
@@ -40,7 +43,8 @@ export default function RootLayout() {
             },
           }}
         />
-      </Stack>
-    </ThemeProvider>
+        </Stack>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }

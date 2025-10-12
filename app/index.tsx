@@ -16,11 +16,7 @@ export default function Dashboard() {
     [router]
   );
 
-  if (ordersResponse.status === "loading") {
-    return <LoadingState />;
-  }
-
-  if (ordersResponse.status === "error") {
+  if (ordersResponse.isError) {
     return (
       <Box flex={1} backgroundColor="primary50" paddingHorizontal="l">
         <Text variant="body" color="alert600" textAlign="center">
@@ -29,6 +25,11 @@ export default function Dashboard() {
       </Box>
     );
   }
+
+  if (!ordersResponse.isSuccess) {
+    return <LoadingState />;
+  }
+
   const { data: orders } = ordersResponse;
 
   return (
@@ -50,9 +51,16 @@ export default function Dashboard() {
 
 const LoadingState = memo(function LoadingState() {
   return (
-    <Box flex={1} backgroundColor="primary50" justifyContent="center" alignItems="center">
+    <Box
+      flex={1}
+      backgroundColor="primary50"
+      justifyContent="center"
+      alignItems="center"
+    >
       <ActivityIndicator size="large" color="#3d1900" />
-      <Text variant="body" marginTop="m">Loading orders...</Text>
+      <Text variant="body" marginTop="m">
+        Loading orders...
+      </Text>
     </Box>
   );
 });

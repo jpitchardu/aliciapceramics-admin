@@ -47,20 +47,7 @@ export default function OrderDetail() {
     }
   }, [orderResponse, navigation]);
 
-  if (orderResponse.status === "loading") {
-    return (
-      <Box
-        flex={1}
-        justifyContent="center"
-        alignItems="center"
-        backgroundColor="primary50"
-      >
-        <ActivityIndicator size="large" color={theme.colors.primary900} />
-      </Box>
-    );
-  }
-
-  if (orderResponse.status === "error") {
+  if (orderResponse.isError) {
     return (
       <Box
         flex={1}
@@ -72,6 +59,19 @@ export default function OrderDetail() {
         <Text variant="body" color="alert600" textAlign="center">
           {orderResponse.error.message}
         </Text>
+      </Box>
+    );
+  }
+
+  if (!orderResponse.isSuccess) {
+    return (
+      <Box
+        flex={1}
+        justifyContent="center"
+        alignItems="center"
+        backgroundColor="primary50"
+      >
+        <ActivityIndicator size="large" color={theme.colors.primary900} />
       </Box>
     );
   }
@@ -92,9 +92,7 @@ export default function OrderDetail() {
     <Box flex={1} backgroundColor="primary50">
       <Box padding="m" gap="l">
         <Box gap="s">
-          <Text variant="label">
-            Pieces ({order.order_details.length})
-          </Text>
+          <Text variant="label">Pieces ({order.order_details.length})</Text>
           <Box gap="s">
             {order.order_details.map((detail) => (
               <PieceAccordion key={detail.id} piece={detail} />
@@ -104,21 +102,21 @@ export default function OrderDetail() {
 
         <Box gap="m">
           <Text variant="label">Timeline</Text>
-          <Box backgroundColor="interactive400" paddingHorizontal="s" paddingVertical="xs" borderRadius="s" alignSelf="flex-start">
-            <Text variant="body">
-              {order.timeline}
-            </Text>
+          <Box
+            backgroundColor="interactive400"
+            paddingHorizontal="s"
+            paddingVertical="xs"
+            borderRadius="s"
+            alignSelf="flex-start"
+          >
+            <Text variant="body">{order.timeline}</Text>
           </Box>
 
           <Text variant="label">Inspiration</Text>
-          <Text variant="body">
-            {order.inspiration}
-          </Text>
+          <Text variant="body">{order.inspiration}</Text>
 
           <Text variant="label">Special Considerations</Text>
-          <Text variant="body">
-            {order.special_considerations}
-          </Text>
+          <Text variant="body">{order.special_considerations}</Text>
 
           <Box gap="s">
             <Text variant="label">Customer</Text>
@@ -133,17 +131,15 @@ export default function OrderDetail() {
                 borderWidth={1}
                 borderColor="neutral200"
               >
-                <Box flexDirection="row" alignItems="center" justifyContent="space-between">
+                <Box
+                  flexDirection="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
                   <Box flex={1} gap="xs">
-                    <Text variant="body">
-                      {order.customers.name}
-                    </Text>
-                    <Text variant="body">
-                      {order.customers.email}
-                    </Text>
-                    <Text variant="body">
-                      {order.customers.phone}
-                    </Text>
+                    <Text variant="body">{order.customers.name}</Text>
+                    <Text variant="body">{order.customers.email}</Text>
+                    <Text variant="body">{order.customers.phone}</Text>
                   </Box>
                   <Box alignItems="center" gap="xs">
                     <Text variant="button" color="primary900" fontSize={10}>
@@ -156,7 +152,12 @@ export default function OrderDetail() {
                 </Box>
               </Box>
             </TouchableOpacity>
-            <Text variant="label" color="neutral600" fontSize={10} textTransform="none">
+            <Text
+              variant="label"
+              color="neutral600"
+              fontSize={10}
+              textTransform="none"
+            >
               Tap to open messages • Long press to copy phone
             </Text>
           </Box>

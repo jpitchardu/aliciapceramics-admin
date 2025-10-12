@@ -1,30 +1,93 @@
-import { useRef, useEffect } from "react";
-import { FlatList } from "react-native";
+import { useRef, useEffect, useState, memo, useCallback } from "react";
+import { FlatList, RefreshControl, ActivityIndicator } from "react-native";
 import { Box, Text } from "@/components";
-import { ConversationWithMessages } from "@/hooks/useConversation";
+import { useMessagesForConversation } from "@/hooks/useMessagesForConversation";
 import { MessageBubble } from "./MessageBubble";
+import { Tables } from "@/api/dbTypes";
 
 type ConversationViewProps = {
-  conversation: ConversationWithMessages;
+  conversationId: string;
 };
 
-export function ConversationView({ conversation }: ConversationViewProps) {
+const renderMessage = ({ item }: { item: Tables<"messages"> }) => (
+  <MessageBubble message={item} />
+);
+
+const keyExtractor = (item: Tables<"messages">) => item.id;
+
+export const ConversationView = memo(function ConversationView({
+  conversationId,
+}: ConversationViewProps) {
   const flatListRef = useRef<FlatList>(null);
-  const sortedMessages = [...conversation.messages].sort(
-    (a, b) =>
-      new Date(a.created_at || 0).getTime() -
-      new Date(b.created_at || 0).getTime()
-  );
+  const [refreshing, setRefreshing] = useState(false);
+  const {
+    data: messages,
+    error,
+    isLoading,
+    refetch,
+  } = useMessagesForConversation(conversationId);
 
   useEffect(() => {
-    if (sortedMessages.length > 0) {
+    if (messages && messages.length > 0) {
       flatListRef.current?.scrollToEnd({ animated: true });
     }
-  }, [sortedMessages.length]);
+  }, [messages]);
 
-  if (sortedMessages.length === 0) {
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, [refetch]);
+
+  if (isLoading) {
     return (
-      <Box flex={1} justifyContent="center" alignItems="center" padding="l">
+      <Box
+        flex={1}
+        justifyContent="center"
+        alignItems="center"
+        backgroundColor="primary50"
+      >
+        <ActivityIndicator size="large" color="#3d1900" />
+        <Text variant="body" color="neutral600" marginTop="m">
+          Loading messages...
+        </Text>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box
+        flex={1}
+        justifyContent="center"
+        alignItems="center"
+        backgroundColor="primary50"
+        padding="l"
+      >
+        <Text
+          variant="heading"
+          color="alert600"
+          textAlign="center"
+          marginBottom="m"
+        >
+          Error Loading Messages
+        </Text>
+        <Text variant="body" color="neutral600" textAlign="center">
+          {error?.message || "Unable to load messages"}
+        </Text>
+      </Box>
+    );
+  }
+
+  if (!messages || messages.length === 0) {
+    return (
+      <Box
+        flex={1}
+        justifyContent="center"
+        alignItems="center"
+        padding="l"
+        backgroundColor="primary50"
+      >
         <Text variant="body" color="neutral600" textAlign="center">
           No messages yet. Start a conversation with the customer!
         </Text>
@@ -36,9 +99,9 @@ export function ConversationView({ conversation }: ConversationViewProps) {
     <Box flex={1} backgroundColor="primary50">
       <FlatList
         ref={flatListRef}
-        data={sortedMessages}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <MessageBubble message={item} />}
+        data={messages}
+        keyExtractor={keyExtractor}
+        renderItem={renderMessage}
         contentContainerStyle={{
           padding: 16,
           paddingBottom: 32,
@@ -46,7 +109,15 @@ export function ConversationView({ conversation }: ConversationViewProps) {
         }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#3d1900"
+            colors={["#3d1900"]}
+          />
+        }
       />
     </Box>
   );
-}
+});

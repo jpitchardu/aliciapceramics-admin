@@ -1,6 +1,6 @@
 import { Tables } from "@/api/dbTypes";
 import { Box, Text } from "@/components";
-import React, { useState } from "react";
+import { useState } from "react";
 import { TouchableOpacity } from "react-native";
 
 interface PieceAccordionProps {
@@ -16,15 +16,16 @@ export function PieceAccordion({ piece }: PieceAccordionProps) {
         <Box flexDirection="row" alignItems="center" gap="s" padding="m">
           <Box flex={1}>
             <Box flexDirection="row" alignItems="center" gap="s">
-              <Text variant="label">
-                {piece.type}
-              </Text>
-              {piece.size && (
-                <Text variant="body">• {piece.size}</Text>
-              )}
+              <Text variant="label">{piece.type}</Text>
+              {piece.size && <Text variant="body">• {piece.size}</Text>}
             </Box>
           </Box>
-          <Box backgroundColor="interactive500" paddingHorizontal="s" paddingVertical="xs" borderRadius="s">
+          <Box
+            backgroundColor="interactive500"
+            paddingHorizontal="s"
+            paddingVertical="xs"
+            borderRadius="s"
+          >
             <Text variant="label" color="neutral50">
               {piece.quantity}
             </Text>
@@ -36,9 +37,7 @@ export function PieceAccordion({ piece }: PieceAccordionProps) {
       </TouchableOpacity>
       {isExpanded && (
         <Box paddingHorizontal="m" paddingBottom="m">
-          <Text variant="body">
-            {piece.description}
-          </Text>
+          <Text variant="body">{piece.description}</Text>
         </Box>
       )}
     </Box>

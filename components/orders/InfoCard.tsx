@@ -1,5 +1,4 @@
 import { Box, Text } from "@/components";
-import React from "react";
 
 interface InfoCardProps {
   title: string;
@@ -39,10 +38,7 @@ export function InfoCard({
           <Text variant="label" marginBottom="xs">
             {title}
           </Text>
-          <Text
-            variant="body"
-            color={getTextColor()}
-          >
+          <Text variant="body" color={getTextColor()}>
             {content}
           </Text>
         </Box>

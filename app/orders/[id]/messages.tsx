@@ -35,23 +35,7 @@ export default function MessagesScreen() {
     }
   }, [orderResponse, navigation]);
 
-  if (orderResponse.status === "loading") {
-    return (
-      <Box
-        flex={1}
-        justifyContent="center"
-        alignItems="center"
-        backgroundColor="primary50"
-      >
-        <ActivityIndicator size="large" color={theme.colors.primary900} />
-        <Text variant="body" color="neutral600" marginTop="m">
-          Loading messages...
-        </Text>
-      </Box>
-    );
-  }
-
-  if (orderResponse.status === "error") {
+  if (orderResponse.isError) {
     return (
       <Box
         flex={1}
@@ -70,6 +54,22 @@ export default function MessagesScreen() {
         </Text>
         <Text variant="body" color="neutral600" textAlign="center">
           {orderResponse.error.message}
+        </Text>
+      </Box>
+    );
+  }
+
+  if (!orderResponse.isSuccess) {
+    return (
+      <Box
+        flex={1}
+        justifyContent="center"
+        alignItems="center"
+        backgroundColor="primary50"
+      >
+        <ActivityIndicator size="large" color={theme.colors.primary900} />
+        <Text variant="body" color="neutral600" marginTop="m">
+          Loading messages...
         </Text>
       </Box>
     );

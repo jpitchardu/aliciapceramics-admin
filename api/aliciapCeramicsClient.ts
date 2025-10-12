@@ -14,7 +14,17 @@ function initClient() {
 
   supabaseCient = createClient<Database>(
     process.env.EXPO_PUBLIC_SUPABASE_URL,
-    process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY
+    process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+    {
+      realtime: {
+        params: {
+          eventsPerSecond: 10,
+        },
+      },
+      auth: {
+        persistSession: false,
+      },
+    }
   );
 }
 
