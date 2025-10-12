@@ -37,25 +37,34 @@ export async function sendMessage(params: { body: string; orderId: string }) {
   if (!response.ok) {
     const data = await response.json();
     throw new Error(
-      data.error || `HTTP ${response.status}: ${response.statusText}`
+      data.error || `HTTP ${response.status}: ${response.statusText}`,
     );
   }
 
   return await response.json();
 }
 
-export function insertMessage(messages: Message[], newMessage: Message): Message[] {
+export function insertMessage(
+  messages: Message[],
+  newMessage: Message,
+): Message[] {
   if (messages.some((m) => m.id === newMessage.id)) return messages;
   return [...messages, newMessage].sort(
     (a, b) =>
-      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
   );
 }
 
-export function updateMessage(messages: Message[], updated: Message): Message[] {
+export function updateMessage(
+  messages: Message[],
+  updated: Message,
+): Message[] {
   return messages.map((m) => (m.id === updated.id ? updated : m));
 }
 
-export function deleteMessage(messages: Message[], deleted: Message): Message[] {
+export function deleteMessage(
+  messages: Message[],
+  deleted: Message,
+): Message[] {
   return messages.filter((m) => m.id !== deleted.id);
 }

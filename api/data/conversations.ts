@@ -26,7 +26,7 @@ export function subscribeToMessages(
     onMessage: (payload: any) => void;
     onSubscribed?: () => void;
     onError?: (error: any) => void;
-  }
+  },
 ): RealtimeChannel {
   const client = getAliciapCeramicsSubaseClient();
 
@@ -44,7 +44,7 @@ export function subscribeToMessages(
         table: "messages",
         filter: `conversation_id=eq.${conversationId}`,
       },
-      callbacks.onMessage
+      callbacks.onMessage,
     )
     .subscribe((status, err) => {
       if (status === "SUBSCRIBED") {

@@ -62,14 +62,17 @@ const buildOrderSummary = (orderDetails: Order["order_details"]) => {
   if (!orderDetails?.length) return "No items";
 
   // Group by type and sum quantities
-  const grouped = orderDetails.reduce((acc, detail) => {
-    if (acc[detail.type]) {
-      acc[detail.type] += detail.quantity;
-    } else {
-      acc[detail.type] = detail.quantity;
-    }
-    return acc;
-  }, {} as Record<string, number>);
+  const grouped = orderDetails.reduce(
+    (acc, detail) => {
+      if (acc[detail.type]) {
+        acc[detail.type] += detail.quantity;
+      } else {
+        acc[detail.type] = detail.quantity;
+      }
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
 
   // Create summary like "2 mugs • 1 vase"
   return Object.entries(grouped)

@@ -24,7 +24,7 @@ function initClient() {
       auth: {
         persistSession: false,
       },
-    }
+    },
   );
 }
 

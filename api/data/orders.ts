@@ -30,7 +30,7 @@ export async function fetchOrders() {
         quantity,
         type
       )
-    `
+    `,
     )
     .order("created_at", { ascending: false });
 
@@ -49,7 +49,7 @@ export async function fetchOrderById(orderId: string) {
       *,
       customers (*),
       order_details (*)
-    `
+    `,
     )
     .eq("id", orderId)
     .single();

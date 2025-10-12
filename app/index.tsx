@@ -13,7 +13,7 @@ export default function Dashboard() {
     (id: string) => {
       router.push(`/orders/${id}`);
     },
-    [router]
+    [router],
   );
 
   if (ordersResponse.isError) {

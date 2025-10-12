@@ -35,7 +35,7 @@ export const TextInput = forwardRef(
         {...rest}
       />
     );
-  }
+  },
 );
 
 TextInput.displayName = "TextInput";

@@ -33,7 +33,7 @@ export function MessageComposer({
         onError: (err) => {
           Alert.alert("Error", err.message || "Failed to send message");
         },
-      }
+      },
     );
   };
 

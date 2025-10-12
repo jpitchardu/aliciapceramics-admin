@@ -6,7 +6,9 @@ type MessageBubbleProps = {
   message: Tables<"messages">;
 };
 
-export const MessageBubble = memo(function MessageBubble({ message }: MessageBubbleProps) {
+export const MessageBubble = memo(function MessageBubble({
+  message,
+}: MessageBubbleProps) {
   const isOutbound = message.direction.trim() === "outbound";
 
   return (

@@ -12,7 +12,10 @@ import { subscribeToMessages } from "@/api/data/conversations";
 export function useMessagesForConversation(conversationId: string | undefined) {
   const queryClient = useQueryClient();
 
-  const queryKey = useMemo(()=>["messages", conversationId], [conversationId]);
+  const queryKey = useMemo(
+    () => ["messages", conversationId],
+    [conversationId],
+  );
 
   const query = useQuery({
     queryKey,
@@ -41,7 +44,10 @@ export function useMessagesForConversation(conversationId: string | undefined) {
         });
       },
       onSubscribed: () => {
-        console.log("✅ Realtime subscription active for conversation:", conversationId);
+        console.log(
+          "✅ Realtime subscription active for conversation:",
+          conversationId,
+        );
       },
       onError: (error) => {
         console.error("❌ Realtime subscription error:", error);
