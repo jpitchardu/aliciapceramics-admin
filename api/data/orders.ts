@@ -32,6 +32,8 @@ export async function fetchOrders() {
       )
     `,
     )
+    .neq("status", "completed")
+    .neq("status", "cancelled")
     .order("created_at", { ascending: false });
 
   if (error) throw error;
@@ -52,6 +54,21 @@ export async function fetchOrderById(orderId: string) {
     `,
     )
     .eq("id", orderId)
+    .single();
+
+  if (error) throw error;
+
+  return data as OrderWithDetails;
+}
+
+export async function cancelOrder(orderId: string) {
+  const client = getAliciapCeramicsSubaseClient();
+
+  const { data, error } = await client
+    .from("orders")
+    .update({ status: "cancelled" })
+    .eq("id", orderId)
+    .select()
     .single();
 
   if (error) throw error;

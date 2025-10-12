@@ -2,14 +2,16 @@ import { PieceAccordion } from "@/components/orders/PieceAccordion";
 import { Box, Text } from "@/components";
 import { theme } from "@/theme";
 import { useOrderDetail } from "@/hooks/useOrderDetail";
+import { useCancelOrder } from "@/hooks/useCancelOrder";
 import * as Clipboard from "expo-clipboard";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useEffect } from "react";
-import { TouchableOpacity, ActivityIndicator } from "react-native";
+import { TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 
 export default function OrderDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const orderResponse = useOrderDetail(id);
+  const cancelOrderMutation = useCancelOrder();
   const navigation = useNavigation();
   const router = useRouter();
 
@@ -88,6 +90,36 @@ export default function OrderDetail() {
     }
   };
 
+  const handleCancelOrder = () => {
+    Alert.alert(
+      "Cancel Order",
+      "Are you sure you want to cancel this order? This action cannot be undone.",
+      [
+        {
+          text: "No",
+          style: "cancel",
+        },
+        {
+          text: "Yes, Cancel Order",
+          style: "destructive",
+          onPress: () => {
+            cancelOrderMutation.mutate(order.id, {
+              onSuccess: () => {
+                router.back();
+              },
+              onError: (error) => {
+                Alert.alert(
+                  "Error",
+                  `Failed to cancel order: ${error.message}`
+                );
+              },
+            });
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <Box flex={1} backgroundColor="primary50">
       <Box padding="m" gap="l">
@@ -162,6 +194,22 @@ export default function OrderDetail() {
             </Text>
           </Box>
         </Box>
+
+        <TouchableOpacity
+          onPress={handleCancelOrder}
+          disabled={cancelOrderMutation.isPending}
+        >
+          <Box
+            backgroundColor="input500"
+            padding="m"
+            borderRadius="m"
+            opacity={cancelOrderMutation.isPending ? 0.5 : 1}
+          >
+            <Text variant="button" color="neutral50" textAlign="center">
+              {cancelOrderMutation.isPending ? "CANCELLING..." : "CANCEL ORDER"}
+            </Text>
+          </Box>
+        </TouchableOpacity>
       </Box>
     </Box>
   );
@@ -192,6 +240,12 @@ function getStatusStyles(status: string | null) {
         badgeBg: "bg-gray-500",
         badgeText: "text-white",
         label: "Drying",
+      };
+    case "cancelled":
+      return {
+        badgeBg: "bg-red-900",
+        badgeText: "text-white",
+        label: "Cancelled",
       };
     default:
       return {

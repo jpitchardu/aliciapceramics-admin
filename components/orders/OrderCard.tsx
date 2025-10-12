@@ -106,6 +106,12 @@ const getStatusStyles = (status: string | null) => {
         borderColor: "neutral600" as const,
         badgeBg: "neutral600" as const,
       };
+    case "cancelled":
+      return {
+        cardBg: "neutral200" as const,
+        borderColor: "alert600" as const,
+        badgeBg: "alert600" as const,
+      };
     default:
       return {
         cardBg: "neutral50" as const,
