@@ -7,12 +7,10 @@ import { MessageComposer } from "./MessageComposer";
 
 type MessagingInterfaceProps = {
   customerId: string;
-  orderId: string;
 };
 
 export function MessagingInterface({
   customerId,
-  orderId,
 }: MessagingInterfaceProps) {
   const {
     data: conversation,
@@ -81,7 +79,10 @@ export function MessagingInterface({
             customer!
           </Text>
         </Box>
-        <MessageComposer orderId={orderId} onMessageSent={handleMessageSent} />
+        <MessageComposer
+          customerId={customerId}
+          onMessageSent={handleMessageSent}
+        />
       </Box>
     );
   }
@@ -91,7 +92,10 @@ export function MessagingInterface({
       <Box flex={1}>
         <ConversationView conversationId={conversation.id} />
       </Box>
-      <MessageComposer orderId={orderId} onMessageSent={handleMessageSent} />
+      <MessageComposer
+        customerId={customerId}
+        onMessageSent={handleMessageSent}
+      />
     </Box>
   );
 }

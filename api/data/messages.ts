@@ -16,7 +16,10 @@ export async function fetchMessagesByConversationId(conversationId: string) {
   return (data || []) as Message[];
 }
 
-export async function sendMessage(params: { body: string; orderId: string }) {
+export async function sendMessage(params: {
+  body: string;
+  customerId: string;
+}) {
   const baseUrl =
     process.env.EXPO_PUBLIC_API_BASE_URL || "https://www.aliciapceramics.com";
 
@@ -67,4 +70,19 @@ export function deleteMessage(
   deleted: Message,
 ): Message[] {
   return messages.filter((m) => m.id !== deleted.id);
+}
+
+export async function markConversationAsRead(conversationId: string) {
+  const client = getAliciapCeramicsSubaseClient();
+
+  const { error } = await client
+    .from("messages")
+    .update({ read_at: new Date().toISOString() })
+    .eq("conversation_id", conversationId)
+    .eq("direction", "inbound")
+    .is("read_at", null);
+
+  if (error) throw error;
+
+  return true;
 }

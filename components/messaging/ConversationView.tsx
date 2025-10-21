@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, memo, useCallback } from "react";
 import { FlatList, RefreshControl, ActivityIndicator } from "react-native";
 import { Box, Text } from "@/components";
 import { useMessagesForConversation } from "@/hooks/useMessagesForConversation";
+import { useMarkConversationAsRead } from "@/hooks/useMarkConversationAsRead";
 import { MessageBubble } from "./MessageBubble";
 import { Tables } from "@/api/dbTypes";
 
@@ -26,12 +27,19 @@ export const ConversationView = memo(function ConversationView({
     isLoading,
     refetch,
   } = useMessagesForConversation(conversationId);
+  const markAsReadMutation = useMarkConversationAsRead();
 
   useEffect(() => {
     if (messages && messages.length > 0) {
       flatListRef.current?.scrollToEnd({ animated: true });
     }
   }, [messages]);
+
+  useEffect(() => {
+    if (conversationId) {
+      markAsReadMutation.mutate(conversationId);
+    }
+  }, [conversationId]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);

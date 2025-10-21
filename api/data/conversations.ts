@@ -2,6 +2,16 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 import { getAliciapCeramicsSubaseClient } from "../aliciapCeramicsClient";
 import { Tables } from "../dbTypes";
 
+export type UnreadConversation = {
+  conversation_id: string;
+  customer_id: string;
+  customer_name: string;
+  customer_phone: string;
+  customer_email: string;
+  unread_count: number;
+  last_message_at: string;
+};
+
 export async function fetchConversationByCustomerId(customerId: string) {
   const client = getAliciapCeramicsSubaseClient();
   const { data, error } = await client
@@ -18,6 +28,18 @@ export async function fetchConversationByCustomerId(customerId: string) {
   }
 
   return data as Tables<"conversations">;
+}
+
+export async function fetchUnreadConversations() {
+  const client = getAliciapCeramicsSubaseClient();
+  const { data, error } = await client
+    .from("conversations_with_unread_messages")
+    .select("*")
+    .order("last_message_at", { ascending: false });
+
+  if (error) throw error;
+
+  return (data || []) as UnreadConversation[];
 }
 
 export function subscribeToMessages(

@@ -5,12 +5,12 @@ import { Box, Text, TextInput } from "@/components";
 import { useSendMessage } from "@/hooks/useSendMessage";
 
 type MessageComposerProps = {
-  orderId: string;
+  customerId: string;
   onMessageSent?: () => void;
 };
 
 export function MessageComposer({
-  orderId,
+  customerId,
   onMessageSent,
 }: MessageComposerProps) {
   const [messageText, setMessageText] = useState("");
@@ -20,21 +20,15 @@ export function MessageComposer({
   const handleSend = async () => {
     if (!messageText.trim()) return;
 
-    sendMessage(
-      {
-        body: messageText.trim(),
-        orderId,
+    sendMessage({ body: messageText.trim(), customerId }, {
+      onSuccess: () => {
+        setMessageText("");
+        onMessageSent?.();
       },
-      {
-        onSuccess: () => {
-          setMessageText("");
-          onMessageSent?.();
-        },
-        onError: (err) => {
-          Alert.alert("Error", err.message || "Failed to send message");
-        },
+      onError: (err) => {
+        Alert.alert("Error", err.message || "Failed to send message");
       },
-    );
+    });
   };
 
   return (

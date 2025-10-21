@@ -75,3 +75,20 @@ export async function cancelOrder(orderId: string) {
 
   return data as OrderWithDetails;
 }
+
+export async function updateOrderDueDate(orderId: string, dueDate: Date | null) {
+  const client = getAliciapCeramicsSubaseClient();
+
+  const dueDateString = dueDate ? dueDate.toISOString().split('T')[0] : null;
+
+  const { data, error } = await client
+    .from("orders")
+    .update({ due_date: dueDateString })
+    .eq("id", orderId)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return data as OrderWithDetails;
+}

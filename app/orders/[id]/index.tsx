@@ -3,17 +3,21 @@ import { Box, Text } from "@/components";
 import { theme } from "@/theme";
 import { useOrderDetail } from "@/hooks/useOrderDetail";
 import { useCancelOrder } from "@/hooks/useCancelOrder";
+import { useUpdateDueDate } from "@/hooks/useUpdateDueDate";
+import { DatePickerModal } from "@/components/DatePickerModal";
 import * as Clipboard from "expo-clipboard";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 
 export default function OrderDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const orderResponse = useOrderDetail(id);
   const cancelOrderMutation = useCancelOrder();
+  const updateDueDateMutation = useUpdateDueDate();
   const navigation = useNavigation();
   const router = useRouter();
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
     if (orderResponse.status === "success") {
@@ -81,7 +85,7 @@ export default function OrderDetail() {
   const { data: order } = orderResponse;
 
   const openMessagingScreen = () => {
-    router.push(`/orders/${order.id}/messages`);
+    router.push(`/customers/${order.customer_id}/conversation`);
   };
 
   const copyPhoneToClipboard = () => {
@@ -120,8 +124,36 @@ export default function OrderDetail() {
     );
   };
 
+  const handleDueDateConfirm = (date: Date | null) => {
+    setShowDatePicker(false);
+    updateDueDateMutation.mutate(
+      { orderId: order.id, dueDate: date },
+      {
+        onError: (error) => {
+          Alert.alert("Error", `Failed to update due date: ${error.message}`);
+        },
+      }
+    );
+  };
+
+  const formatDueDate = (dateString: string | null) => {
+    if (!dateString) return "No deadline set";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   return (
     <Box flex={1} backgroundColor="primary50">
+      <DatePickerModal
+        visible={showDatePicker}
+        currentDate={order.due_date ? new Date(order.due_date) : null}
+        onConfirm={handleDueDateConfirm}
+        onCancel={() => setShowDatePicker(false)}
+      />
       <Box padding="m" gap="l">
         <Box gap="s">
           <Text variant="label">Pieces ({order.order_details.length})</Text>
@@ -133,6 +165,40 @@ export default function OrderDetail() {
         </Box>
 
         <Box gap="m">
+          <Box gap="s">
+            <Text variant="label">Due Date</Text>
+            <Box
+              backgroundColor={order.due_date ? "interactive400" : "neutral200"}
+              paddingHorizontal="s"
+              paddingVertical="xs"
+              borderRadius="s"
+              alignSelf="flex-start"
+            >
+              <Text variant="body" color={order.due_date ? "primary900" : "neutral600"}>
+                {formatDueDate(order.due_date)}
+              </Text>
+            </Box>
+            <TouchableOpacity
+              onPress={() => setShowDatePicker(true)}
+              disabled={updateDueDateMutation.isPending}
+            >
+              <Box
+                backgroundColor="interactive500"
+                padding="m"
+                borderRadius="m"
+                opacity={updateDueDateMutation.isPending ? 0.5 : 1}
+              >
+                <Text variant="button" color="neutral50" textAlign="center">
+                  {updateDueDateMutation.isPending
+                    ? "UPDATING..."
+                    : order.due_date
+                      ? "CHANGE DUE DATE"
+                      : "SET DUE DATE"}
+                </Text>
+              </Box>
+            </TouchableOpacity>
+          </Box>
+
           <Text variant="label">Timeline</Text>
           <Box
             backgroundColor="interactive400"
