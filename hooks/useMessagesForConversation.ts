@@ -28,7 +28,6 @@ export function useMessagesForConversation(conversationId: string | undefined) {
 
     const channel = subscribeToMessages(conversationId, {
       onMessage: (payload) => {
-        console.log("Realtime event:", payload);
 
         queryClient.setQueryData(queryKey, (old: Message[] = []) => {
           if (payload.eventType === "INSERT") {
