@@ -283,6 +283,7 @@ export type Database = {
           id: string
           inspiration: string
           last_message_at: string | null
+          name: string | null
           special_considerations: string | null
           status: string | null
           status_updated_at: string | null
@@ -300,6 +301,7 @@ export type Database = {
           id?: string
           inspiration: string
           last_message_at?: string | null
+          name?: string | null
           special_considerations?: string | null
           status?: string | null
           status_updated_at?: string | null
@@ -317,6 +319,7 @@ export type Database = {
           id?: string
           inspiration?: string
           last_message_at?: string | null
+          name?: string | null
           special_considerations?: string | null
           status?: string | null
           status_updated_at?: string | null

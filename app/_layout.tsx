@@ -11,14 +11,9 @@ export default function RootLayout() {
       <ThemeProvider theme={theme}>
         <Stack>
           <Stack.Screen
-            name="index"
+            name="(tabs)"
             options={{
-              headerStyle: {
-                backgroundColor: theme.colors.primary50,
-              },
-              headerTitleStyle: {
-                color: theme.colors.primary900,
-              },
+              headerShown: false,
             }}
           />
           <Stack.Screen
@@ -30,10 +25,11 @@ export default function RootLayout() {
               headerTitleStyle: {
                 color: theme.colors.primary900,
               },
+              presentation: "card",
             }}
           />
           <Stack.Screen
-            name="orders/[id]/messages"
+            name="customers/[id]/conversation"
             options={{
               headerStyle: {
                 backgroundColor: theme.colors.primary100,
@@ -41,6 +37,7 @@ export default function RootLayout() {
               headerTitleStyle: {
                 color: theme.colors.primary900,
               },
+              presentation: "card",
             }}
           />
         </Stack>

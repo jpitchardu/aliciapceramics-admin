@@ -12,6 +12,16 @@ export type UnreadConversation = {
   last_message_at: string;
 };
 
+export type ConversationWithCustomer = {
+  conversation_id: string;
+  customer_id: string;
+  customer_name: string;
+  customer_phone: string;
+  customer_email: string;
+  unread_count: number;
+  last_message_at: string | null;
+};
+
 export async function fetchConversationByCustomerId(customerId: string) {
   const client = getAliciapCeramicsSubaseClient();
   const { data, error } = await client
@@ -40,6 +50,38 @@ export async function fetchUnreadConversations() {
   if (error) throw error;
 
   return (data || []) as UnreadConversation[];
+}
+
+export async function fetchAllConversations() {
+  const client = getAliciapCeramicsSubaseClient();
+  const { data, error } = await client
+    .from("conversations")
+    .select(
+      `
+      id,
+      customer_id,
+      customer_phone,
+      customers!inner (
+        name,
+        email
+      )
+    `,
+    )
+    .order("updated_at", { ascending: false });
+
+  if (error) throw error;
+
+  const conversations = (data || []).map((conv: any) => ({
+    conversation_id: conv.id,
+    customer_id: conv.customer_id,
+    customer_name: conv.customers.name,
+    customer_phone: conv.customer_phone,
+    customer_email: conv.customers.email,
+    unread_count: 0,
+    last_message_at: null,
+  }));
+
+  return conversations as ConversationWithCustomer[];
 }
 
 export function subscribeToMessages(

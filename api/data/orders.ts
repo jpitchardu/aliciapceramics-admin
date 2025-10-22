@@ -4,12 +4,13 @@ import { Tables } from "../dbTypes";
 export type Order = {
   id: string;
   status: string | null;
-  customers: { name: string };
+  name: string | null;
+  customers: { name: string } | null;
   order_details: { id: string; quantity: number; type: string }[];
 };
 
 export type OrderWithDetails = Tables<"orders"> & {
-  customers: Tables<"customers">;
+  customers: Tables<"customers"> | null;
   order_details: Tables<"order_details">[];
 };
 
@@ -22,6 +23,7 @@ export async function fetchOrders() {
       `
       id,
       status,
+      name,
       customers (
         name
       ),
@@ -32,8 +34,6 @@ export async function fetchOrders() {
       )
     `,
     )
-    .neq("status", "completed")
-    .neq("status", "cancelled")
     .order("created_at", { ascending: false });
 
   if (error) throw error;
@@ -81,7 +81,7 @@ export async function updateOrderDueDate(orderId: string, dueDate: Date | null) 
 
   const dueDateString = dueDate ? dueDate.toISOString().split('T')[0] : null;
 
-  const { data, error } = await client
+  const { data, error} = await client
     .from("orders")
     .update({ due_date: dueDateString })
     .eq("id", orderId)
@@ -91,4 +91,52 @@ export async function updateOrderDueDate(orderId: string, dueDate: Date | null) 
   if (error) throw error;
 
   return data as OrderWithDetails;
+}
+
+export type CreateStorefrontOrderParams = {
+  name: string;
+  dueDate?: Date;
+  pieceDetails: Array<{
+    type: string;
+    size?: string;
+    quantity: number;
+    description: string;
+  }>;
+};
+
+export async function createStorefrontOrder(params: CreateStorefrontOrderParams) {
+  const client = getAliciapCeramicsSubaseClient();
+
+  const { data: order, error: orderError } = await client
+    .from("orders")
+    .insert({
+      type: "storefront",
+      name: params.name,
+      due_date: params.dueDate?.toISOString().split('T')[0] || null,
+      customer_id: null,
+      timeline: params.dueDate?.toISOString().split('T')[0] || "2026-12-31",
+      inspiration: "",
+      special_considerations: "",
+      consent: true,
+    })
+    .select()
+    .single();
+
+  if (orderError) throw orderError;
+
+  const orderDetails = params.pieceDetails.map(piece => ({
+    order_id: order.id,
+    type: piece.type,
+    size: piece.size || null,
+    quantity: piece.quantity,
+    description: piece.description,
+  }));
+
+  const { error: detailsError } = await client
+    .from("order_details")
+    .insert(orderDetails);
+
+  if (detailsError) throw detailsError;
+
+  return order;
 }

@@ -8,7 +8,7 @@ import { DatePickerModal } from "@/components/DatePickerModal";
 import * as Clipboard from "expo-clipboard";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { TouchableOpacity, ActivityIndicator, Alert } from "react-native";
+import { TouchableOpacity, ActivityIndicator, Alert, ScrollView } from "react-native";
 
 export default function OrderDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -25,7 +25,7 @@ export default function OrderDetail() {
       const statusStyles = getStatusStyles(order.status);
 
       navigation.setOptions({
-        title: order.customers.name,
+        title: order.customers?.name || order.name || "Order",
         headerStyle: {
           backgroundColor: theme.colors.primary100,
         },
@@ -84,12 +84,16 @@ export default function OrderDetail() {
 
   const { data: order } = orderResponse;
 
+  const isStorefrontOrder = !order.customers;
+
   const openMessagingScreen = () => {
-    router.push(`/customers/${order.customer_id}/conversation`);
+    if (!isStorefrontOrder) {
+      router.push(`/customers/${order.customer_id}/conversation`);
+    }
   };
 
   const copyPhoneToClipboard = () => {
-    if (order.customers.phone) {
+    if (order.customers?.phone) {
       Clipboard.setStringAsync(order.customers.phone);
     }
   };
@@ -154,7 +158,8 @@ export default function OrderDetail() {
         onConfirm={handleDueDateConfirm}
         onCancel={() => setShowDatePicker(false)}
       />
-      <Box padding="m" gap="l">
+      <ScrollView>
+        <Box padding="m" gap="l">
         <Box gap="s">
           <Text variant="label">Pieces ({order.order_details.length})</Text>
           <Box gap="s">
@@ -216,49 +221,51 @@ export default function OrderDetail() {
           <Text variant="label">Special Considerations</Text>
           <Text variant="body">{order.special_considerations}</Text>
 
-          <Box gap="s">
-            <Text variant="label">Customer</Text>
-            <TouchableOpacity
-              onPress={openMessagingScreen}
-              onLongPress={copyPhoneToClipboard}
-            >
-              <Box
-                backgroundColor="primary100"
-                padding="m"
-                borderRadius="m"
-                borderWidth={1}
-                borderColor="neutral200"
+          {!isStorefrontOrder && (
+            <Box gap="s">
+              <Text variant="label">Customer</Text>
+              <TouchableOpacity
+                onPress={openMessagingScreen}
+                onLongPress={copyPhoneToClipboard}
               >
                 <Box
-                  flexDirection="row"
-                  alignItems="center"
-                  justifyContent="space-between"
+                  backgroundColor="primary100"
+                  padding="m"
+                  borderRadius="m"
+                  borderWidth={1}
+                  borderColor="neutral200"
                 >
-                  <Box flex={1} gap="xs">
-                    <Text variant="body">{order.customers.name}</Text>
-                    <Text variant="body">{order.customers.email}</Text>
-                    <Text variant="body">{order.customers.phone}</Text>
-                  </Box>
-                  <Box alignItems="center" gap="xs">
-                    <Text variant="button" color="primary900" fontSize={10}>
-                      MESSAGES
-                    </Text>
-                    <Text variant="body" fontSize={18}>
-                      →
-                    </Text>
+                  <Box
+                    flexDirection="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    <Box flex={1} gap="xs">
+                      <Text variant="body">{order.customers!.name}</Text>
+                      <Text variant="body">{order.customers!.email}</Text>
+                      <Text variant="body">{order.customers!.phone}</Text>
+                    </Box>
+                    <Box alignItems="center" gap="xs">
+                      <Text variant="button" color="primary900" fontSize={10}>
+                        MESSAGES
+                      </Text>
+                      <Text variant="body" fontSize={18}>
+                        →
+                      </Text>
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
-            </TouchableOpacity>
-            <Text
-              variant="label"
-              color="neutral600"
-              fontSize={10}
-              textTransform="none"
-            >
-              Tap to open messages • Long press to copy phone
-            </Text>
-          </Box>
+              </TouchableOpacity>
+              <Text
+                variant="label"
+                color="neutral600"
+                fontSize={10}
+                textTransform="none"
+              >
+                Tap to open messages • Long press to copy phone
+              </Text>
+            </Box>
+          )}
         </Box>
 
         <TouchableOpacity
@@ -276,7 +283,8 @@ export default function OrderDetail() {
             </Text>
           </Box>
         </TouchableOpacity>
-      </Box>
+        </Box>
+      </ScrollView>
     </Box>
   );
 }

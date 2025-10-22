@@ -54,7 +54,7 @@ export function insertMessage(
   if (messages.some((m) => m.id === newMessage.id)) return messages;
   return [...messages, newMessage].sort(
     (a, b) =>
-      new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+      new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime(),
   );
 }
 
