@@ -140,3 +140,39 @@ export async function createStorefrontOrder(params: CreateStorefrontOrderParams)
 
   return order;
 }
+
+export type UpdateOrderDetailProgressParams = {
+  orderDetailId: string;
+  status?: string;
+  completedQuantity?: number;
+};
+
+export async function updateOrderDetailProgress(params: UpdateOrderDetailProgressParams) {
+  const client = getAliciapCeramicsSubaseClient();
+
+  const updates: {
+    status?: string;
+    completed_quantity?: number;
+    status_changed_at?: string;
+  } = {};
+
+  if (params.status !== undefined) {
+    updates.status = params.status;
+    updates.status_changed_at = new Date().toISOString();
+  }
+
+  if (params.completedQuantity !== undefined) {
+    updates.completed_quantity = params.completedQuantity;
+  }
+
+  const { data, error } = await client
+    .from("order_details")
+    .update(updates)
+    .eq("id", params.orderDetailId)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return data as Tables<"order_details">;
+}

@@ -1,0 +1,9 @@
+pre-push:
+  parallel: true
+  commands:
+    lint:
+      run: pnpm lint
+      fail_text: "Linting failed. Please fix the errors before pushing."
+    test:
+      run: pnpm test
+      fail_text: "Tests failed. Please fix the failing tests before pushing."

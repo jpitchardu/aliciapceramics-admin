@@ -76,7 +76,7 @@ export type Database = {
           created_at: string
           customer_id: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           phone_number: string
           revocation_method: string | null
           user_agent: string | null
@@ -90,7 +90,7 @@ export type Database = {
           created_at?: string
           customer_id: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           phone_number: string
           revocation_method?: string | null
           user_agent?: string | null
@@ -104,7 +104,7 @@ export type Database = {
           created_at?: string
           customer_id?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           phone_number?: string
           revocation_method?: string | null
           user_agent?: string | null
@@ -199,6 +199,7 @@ export type Database = {
       }
       order_details: {
         Row: {
+          completed_quantity: number | null
           created_at: string | null
           description: string
           id: string
@@ -210,6 +211,7 @@ export type Database = {
           type: string
         }
         Insert: {
+          completed_quantity?: number | null
           created_at?: string | null
           description: string
           id?: string
@@ -221,6 +223,7 @@ export type Database = {
           type: string
         }
         Update: {
+          completed_quantity?: number | null
           created_at?: string | null
           description?: string
           id?: string
@@ -442,7 +445,7 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      complete_task: { Args: { task_id_param: string }; Returns: Json }
     }
     Enums: {
       [_ in never]: never

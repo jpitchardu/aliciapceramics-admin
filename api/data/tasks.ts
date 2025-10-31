@@ -5,8 +5,10 @@ export type Task = Tables<"tasks"> & {
   order_details: {
     type: string;
     quantity: number;
+    completed_quantity: number;
     description: string;
     order_id: string;
+    status: string;
   };
 };
 
@@ -23,8 +25,10 @@ export async function fetchTodaysTasks() {
       order_details (
         type,
         quantity,
+        completed_quantity,
         description,
-        order_id
+        order_id,
+        status
       )
     `
     )
@@ -39,19 +43,20 @@ export async function fetchTodaysTasks() {
 }
 
 export async function completeTask(taskId: string) {
-  const client = getAliciapCeramicsSubaseClient();
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL || "https://aliciapceramics.com";
 
-  const { data, error } = await client
-    .from("tasks")
-    .update({
-      status: "completed",
-      completed_at: new Date().toISOString(),
-    })
-    .eq("id", taskId)
-    .select()
-    .single();
+  const response = await fetch(`${apiUrl}/api/completeTask?id=${taskId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-  if (error) throw error;
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to complete task");
+  }
 
-  return data as Tables<"tasks">;
+  const data = await response.json();
+  return data;
 }

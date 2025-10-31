@@ -4,6 +4,7 @@ import { theme } from "@/theme";
 import { useOrderDetail } from "@/hooks/useOrderDetail";
 import { useCancelOrder } from "@/hooks/useCancelOrder";
 import { useUpdateDueDate } from "@/hooks/useUpdateDueDate";
+import { useUpdateOrderDetailProgress } from "@/hooks/useUpdateOrderDetailProgress";
 import { DatePickerModal } from "@/components/DatePickerModal";
 import * as Clipboard from "expo-clipboard";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
@@ -15,6 +16,7 @@ export default function OrderDetail() {
   const orderResponse = useOrderDetail(id);
   const cancelOrderMutation = useCancelOrder();
   const updateDueDateMutation = useUpdateDueDate();
+  const updateProgressMutation = useUpdateOrderDetailProgress(id);
   const navigation = useNavigation();
   const router = useRouter();
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -150,6 +152,21 @@ export default function OrderDetail() {
     });
   };
 
+  const handleUpdateProgress = (
+    orderDetailId: string,
+    status?: string,
+    completedQuantity?: number
+  ) => {
+    updateProgressMutation.mutate(
+      { orderDetailId, status, completedQuantity },
+      {
+        onError: (error) => {
+          Alert.alert("Error", `Failed to update progress: ${error.message}`);
+        },
+      }
+    );
+  };
+
   return (
     <Box flex={1} backgroundColor="primary50">
       <DatePickerModal
@@ -164,7 +181,11 @@ export default function OrderDetail() {
           <Text variant="label">Pieces ({order.order_details.length})</Text>
           <Box gap="s">
             {order.order_details.map((detail) => (
-              <PieceAccordion key={detail.id} piece={detail} />
+              <PieceAccordion
+                key={detail.id}
+                piece={detail}
+                onUpdateProgress={handleUpdateProgress}
+              />
             ))}
           </Box>
         </Box>

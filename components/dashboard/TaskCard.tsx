@@ -37,6 +37,11 @@ export function TaskCard({ task, onPress, onComplete }: TaskCardProps) {
           <Text variant="body">
             {task.quantity} × {task.order_details.type}
           </Text>
+          {task.order_details.completed_quantity > 0 && (
+            <Text variant="body" color="interactive500" fontSize={12} fontWeight="600">
+              Progress: {task.order_details.completed_quantity}/{task.order_details.quantity} ({task.order_details.status})
+            </Text>
+          )}
           {task.order_details.description && (
             <Text variant="body" color="neutral600" fontSize={12}>
               {task.order_details.description}
