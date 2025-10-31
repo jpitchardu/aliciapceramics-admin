@@ -5,6 +5,9 @@ export type Order = {
   id: string;
   status: string | null;
   name: string | null;
+  type: string | null;
+  due_date: string | null;
+  timeline: string | null;
   customers: { name: string } | null;
   order_details: { id: string; quantity: number; type: string }[];
 };
@@ -24,6 +27,9 @@ export async function fetchOrders() {
       id,
       status,
       name,
+      type,
+      due_date,
+      timeline,
       customers (
         name
       ),
