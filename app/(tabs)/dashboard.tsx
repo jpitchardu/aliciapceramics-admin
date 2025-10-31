@@ -190,6 +190,26 @@ export default function Dashboard() {
                 </Text>
               </Box>
             )}
+
+          <Box gap="s" marginTop="l">
+            <Text variant="heading">Quick Actions</Text>
+            <TouchableOpacity onPress={() => router.push("/availability/index" as any)}>
+              <Box
+                backgroundColor="neutral50"
+                padding="m"
+                borderRadius="m"
+                borderWidth={1}
+                borderColor="neutral200"
+              >
+                <Text variant="heading" fontSize={16} marginBottom="xs">
+                  Manage Availability
+                </Text>
+                <Text variant="body" color="neutral600" fontSize={14}>
+                  Set your working hours for upcoming days
+                </Text>
+              </Box>
+            </TouchableOpacity>
+          </Box>
         </Box>
       </ScrollView>
     </Box>

@@ -40,6 +40,19 @@ export default function RootLayout() {
               presentation: "card",
             }}
           />
+          <Stack.Screen
+            name="availability/index"
+            options={{
+              title: "Manage Availability",
+              headerStyle: {
+                backgroundColor: theme.colors.primary50,
+              },
+              headerTitleStyle: {
+                color: theme.colors.primary900,
+              },
+              presentation: "card",
+            }}
+          />
         </Stack>
       </ThemeProvider>
     </QueryClientProvider>
