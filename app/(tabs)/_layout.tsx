@@ -49,6 +49,13 @@ export default function TabLayout() {
           tabBarLabel: "Messages",
         }}
       />
+      <Tabs.Screen
+        name="week"
+        options={{
+          title: "Week View",
+          tabBarLabel: "Week",
+        }}
+      />
     </Tabs>
   );
 }

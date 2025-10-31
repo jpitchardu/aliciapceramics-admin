@@ -42,6 +42,49 @@ export async function fetchTodaysTasks() {
   return (data || []) as Task[];
 }
 
+export async function fetchWeekTasks() {
+  const client = getAliciapCeramicsSubaseClient();
+
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+  monday.setHours(0, 0, 0, 0);
+
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  sunday.setHours(23, 59, 59, 999);
+
+  const mondayStr = monday.toISOString().split('T')[0];
+  const sundayStr = sunday.toISOString().split('T')[0];
+
+  const { data, error } = await client
+    .from("tasks")
+    .select(
+      `
+      *,
+      order_details (
+        type,
+        quantity,
+        completed_quantity,
+        description,
+        order_id,
+        status
+      )
+    `
+    )
+    .gte("date", mondayStr)
+    .lte("date", sundayStr)
+    .eq("status", "pending")
+    .order("date", { ascending: true })
+    .order("is_late", { ascending: false })
+    .order("estimated_hours", { ascending: false });
+
+  if (error) throw error;
+
+  return (data || []) as Task[];
+}
+
 export async function completeTask(taskId: string) {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL || "https://aliciapceramics.com";
 
