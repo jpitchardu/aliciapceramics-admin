@@ -60,3 +60,22 @@ export async function completeTask(taskId: string) {
   const data = await response.json();
   return data;
 }
+
+export async function regenerateSchedule() {
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL || "https://aliciapceramics.com";
+
+  const response = await fetch(`${apiUrl}/api/scheduleTasks`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Failed to regenerate schedule");
+  }
+
+  const data = await response.json();
+  return data;
+}
