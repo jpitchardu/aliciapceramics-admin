@@ -6,10 +6,13 @@ export const theme = createTheme({
     // SEMANTIC COLOR SYSTEM - Exact match from Tailwind config
 
     // PRIMARY (Brown) - Actions & Text
-    primary50: "#fbfaf9", // page backgrounds
-    primary100: "#f0e7da", // form containers
-    primary800: "#2a1100", // button pressed states
-    primary900: "#3d1900", // main text, buttons
+    primary50: "#fbfaf9", // Existing - lightest background
+    primary100: "#f0e7da", // Existing - form containers
+    primary300: "#d8c0a4", // Borders
+    primary500: "#a3784e", // Accents
+    primary700: "#583d26", // Secondary text
+    primary800: "#2a1100", // Existing - pressed states
+    primary900: "#3d1900", // Existing - main text
 
     // INTERACTIVE (Blue) - Selection & Information
     interactive300: "rgba(189, 201, 203, 0.3)", // info backgrounds
@@ -53,8 +56,18 @@ export const theme = createTheme({
       fontFamily: "Poppins",
       fontSize: 16,
       lineHeight: 24,
-      fontWeight: "400",
+      fontWeight: 400,
       color: "primary900",
+    }, // ADD THIS - Large Title for iOS native headers
+    title: {
+      fontFamily: "Inter",
+      fontSize: 34, // iOS standard large title size
+      lineHeight: 41, // 1.2 ratio for headers
+      fontWeight: "700", // Bold like your heading
+      color: "primary900",
+      letterSpacing: 0.5, // Match your heading letter spacing
+      textTransform: "uppercase", // ✅ Match your design system
+      // Note: textTransform should NOT be uppercase for large titles
     },
 
     // Brand typography (Georgia, light, lowercase, wide spacing)
@@ -62,7 +75,7 @@ export const theme = createTheme({
       fontFamily: "Georgia",
       fontSize: 24,
       lineHeight: 32,
-      fontWeight: "300", // brandLight from Tailwind
+      fontWeight: 300, // brandLight from Tailwind
       color: "primary900",
       letterSpacing: 2,
       textTransform: "lowercase",
@@ -73,7 +86,7 @@ export const theme = createTheme({
       fontFamily: "Inter",
       fontSize: 20,
       lineHeight: 28,
-      fontWeight: "700", // headingBold from Tailwind
+      fontWeight: 700, // headingBold from Tailwind
       color: "primary900",
       letterSpacing: 0.5,
       textTransform: "uppercase",
@@ -84,7 +97,7 @@ export const theme = createTheme({
       fontFamily: "Inter",
       fontSize: 11,
       lineHeight: 16,
-      fontWeight: "600", // labelSemibold from Tailwind
+      fontWeight: 600, // labelSemibold from Tailwind
       color: "primary900",
       letterSpacing: 0.3,
       textTransform: "uppercase",
@@ -95,7 +108,7 @@ export const theme = createTheme({
       fontFamily: "Inter",
       fontSize: 14,
       lineHeight: 20,
-      fontWeight: "600", // buttonSemibold from Tailwind
+      fontWeight: 600, // buttonSemibold from Tailwind
       color: "neutral50", // White text on dark buttons
       letterSpacing: 0.5,
       textTransform: "uppercase",
@@ -106,7 +119,7 @@ export const theme = createTheme({
       fontFamily: "Poppins",
       fontSize: 16,
       lineHeight: 24,
-      fontWeight: "400", // bodyRegular from Tailwind
+      fontWeight: 400, // bodyRegular from Tailwind
       color: "primary900", // Brown text
     },
   },
@@ -182,6 +195,6 @@ export const theme = createTheme({
     phone: 0,
     tablet: 768,
   },
-});
+} as const);
 
 export type Theme = typeof theme;

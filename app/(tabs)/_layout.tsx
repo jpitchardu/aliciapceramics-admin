@@ -1,61 +1,29 @@
-import { Tabs } from "expo-router";
+import { NativeTabs, Label, Icon } from "expo-router/unstable-native-tabs";
 import { theme } from "@/theme";
 
 export default function TabLayout() {
   return (
-    <Tabs
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: theme.colors.primary50,
-        },
-        headerTitleStyle: {
-          color: theme.colors.primary900,
-          fontFamily: "Inter-Bold",
-          fontSize: 18,
-          textTransform: "uppercase",
-        },
-        tabBarStyle: {
-          backgroundColor: theme.colors.neutral50,
-          borderTopColor: theme.colors.neutral200,
-          borderTopWidth: 1,
-        },
-        tabBarActiveTintColor: theme.colors.primary900,
-        tabBarInactiveTintColor: theme.colors.neutral600,
-        tabBarLabelStyle: {
-          fontFamily: "Inter-SemiBold",
-          fontSize: 11,
-          textTransform: "uppercase",
-        },
-      }}
+    <NativeTabs
+      backgroundColor={theme.colors.primary100}
+      iconColor={theme.colors.primary900}
+      minimizeBehavior="onScrollDown"
     >
-      <Tabs.Screen
-        name="dashboard"
-        options={{
-          title: "Dashboard",
-          tabBarLabel: "Home",
-        }}
-      />
-      <Tabs.Screen
-        name="orders"
-        options={{
-          title: "Orders",
-          tabBarLabel: "Orders",
-        }}
-      />
-      <Tabs.Screen
-        name="conversations"
-        options={{
-          title: "Messages",
-          tabBarLabel: "Messages",
-        }}
-      />
-      <Tabs.Screen
-        name="week"
-        options={{
-          title: "Week View",
-          tabBarLabel: "Week",
-        }}
-      />
-    </Tabs>
+      <NativeTabs.Trigger name="dashboard">
+        <Label hidden />
+        <Icon sf={{ default: "house", selected: "house.fill" }} />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="orders">
+        <Label hidden />
+        <Icon sf={"list.bullet"} />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="conversations">
+        <Label hidden />
+        <Icon sf={{ default: "bubble.left", selected: "bubble.left.fill" }} />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="week">
+        <Label hidden />
+        <Icon sf={"calendar"} />
+      </NativeTabs.Trigger>
+    </NativeTabs>
   );
 }

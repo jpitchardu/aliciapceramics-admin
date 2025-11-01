@@ -6,13 +6,15 @@ import { useUnreadConversations } from "@/hooks/useUnreadConversations";
 import { useCompleteTask } from "@/hooks/useCompleteTask";
 import { useRegenerateSchedule } from "@/hooks/useRegenerateSchedule";
 import { useRouter } from "expo-router";
-import { memo, useCallback } from "react";
+import { ComponentProps, memo, useCallback } from "react";
 import {
   ScrollView,
   ActivityIndicator,
   Alert,
   TouchableOpacity,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { theme } from "@/theme";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -88,19 +90,7 @@ export default function Dashboard() {
   const hasError = tasksResponse.isError || conversationsResponse.isError;
 
   if (hasError) {
-    return (
-      <Box
-        flex={1}
-        backgroundColor="primary50"
-        paddingHorizontal="l"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Text variant="body" color="alert600" textAlign="center">
-          Error loading dashboard, {JSON.stringify(tasksResponse.error)}
-        </Text>
-      </Box>
-    );
+    return <ErrorState error={JSON.stringify(tasksResponse.error)} />;
   }
 
   if (isLoading) {
@@ -111,8 +101,17 @@ export default function Dashboard() {
   const { data: conversations } = conversationsResponse;
 
   return (
-    <Box flex={1} backgroundColor="primary50">
+    <SafeAreaView
+      style={{
+        flex: 1,
+        paddingHorizontal: theme.spacing.m,
+        backgroundColor: theme.colors.primary50,
+      }}
+    >
       <ScrollView style={{ flex: 1 }}>
+        <Text variant="title" paddingTop="xxl">
+          Dashboard
+        </Text>
         <Box padding="m" gap="l">
           {conversations && conversations.length > 0 && (
             <Box gap="s">
@@ -180,25 +179,15 @@ export default function Dashboard() {
                 alignItems="center"
                 paddingVertical="xl"
               >
-                <Text variant="heading" color="neutral600" textAlign="center">
+                <Text variant="heading" color="primary900" textAlign="center">
                   All caught up! 🎉
-                </Text>
-                <Text
-                  variant="body"
-                  color="neutral600"
-                  textAlign="center"
-                  marginTop="s"
-                >
-                  No tasks or unread messages
                 </Text>
               </Box>
             )}
 
           <Box gap="s" marginTop="l">
             <Text variant="heading">Quick Actions</Text>
-            <TouchableOpacity
-              onPress={() => router.push("/availability")}
-            >
+            <TouchableOpacity onPress={() => router.push("/availability")}>
               <Box
                 backgroundColor="neutral50"
                 padding="m"
@@ -217,9 +206,25 @@ export default function Dashboard() {
           </Box>
         </Box>
       </ScrollView>
-    </Box>
+    </SafeAreaView>
   );
 }
+
+const ErrorState = memo<{ error: string }>(function ErrorState({ error }) {
+  return (
+    <Box
+      flex={1}
+      backgroundColor="primary50"
+      paddingHorizontal="l"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Text variant="body" color="alert600" textAlign="center">
+        Error loading dashboard, {JSON.stringify(error)}
+      </Text>
+    </Box>
+  );
+});
 
 const LoadingState = memo(function LoadingState() {
   return (
@@ -229,7 +234,7 @@ const LoadingState = memo(function LoadingState() {
       justifyContent="center"
       alignItems="center"
     >
-      <ActivityIndicator size="large" color="#3d1900" />
+      <ActivityIndicator size="large" color="primary800" />
       <Text variant="body" marginTop="m">
         Loading dashboard...
       </Text>

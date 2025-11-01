@@ -1,5 +1,6 @@
 import { Box, Text } from "@/components";
 import { useOrders, Order } from "@/hooks/useOrders";
+import { Host } from "@expo/ui/swift-ui";
 import { useRouter } from "expo-router";
 import {
   ScrollView,
@@ -8,6 +9,8 @@ import {
   StyleSheet,
 } from "react-native";
 import { useMemo, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { theme } from "@/theme";
 
 type FilterType = "all" | "commissioned" | "storefront" | "cancelled";
 
@@ -19,7 +22,7 @@ export default function OrdersScreen() {
   const filteredAndSortedOrders = useMemo(() => {
     if (!orders) return [];
 
-    let filtered = orders.filter(order => {
+    let filtered = orders.filter((order) => {
       if (activeFilter === "all") {
         return order.status !== "cancelled";
       }
@@ -75,7 +78,13 @@ export default function OrdersScreen() {
     );
   }
 
-  const FilterPill = ({ filter, label }: { filter: FilterType; label: string }) => (
+  const FilterPill = ({
+    filter,
+    label,
+  }: {
+    filter: FilterType;
+    label: string;
+  }) => (
     <TouchableOpacity onPress={() => setActiveFilter(filter)}>
       <Box
         paddingHorizontal="m"
@@ -97,8 +106,19 @@ export default function OrdersScreen() {
   );
 
   return (
-    <Box flex={1} backgroundColor="primary50">
+    <SafeAreaView
+      style={{
+        flex: 1,
+        paddingHorizontal: theme.spacing.m,
+        backgroundColor: theme.colors.primary50,
+      }}
+    >
       <ScrollView style={{ flex: 1 }}>
+        <Host matchContents>
+          <Text variant="title" paddingTop="xxl">
+            Orders
+          </Text>
+        </Host>
         <Box paddingHorizontal="m" paddingTop="m" paddingBottom="s">
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <Box flexDirection="row" gap="s">
@@ -124,7 +144,12 @@ export default function OrdersScreen() {
                   borderWidth={1}
                   borderColor="neutral200"
                 >
-                  <Box flexDirection="row" justifyContent="space-between" alignItems="center" marginBottom="xs">
+                  <Box
+                    flexDirection="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    marginBottom="xs"
+                  >
                     <Text variant="heading">
                       {order.customers?.name || order.name || "Order"}
                     </Text>
@@ -133,7 +158,11 @@ export default function OrdersScreen() {
                         paddingHorizontal="s"
                         paddingVertical="xs"
                         borderRadius="s"
-                        backgroundColor={order.type === "commissioned" ? "interactive300" : "input300"}
+                        backgroundColor={
+                          order.type === "commissioned"
+                            ? "interactive300"
+                            : "input300"
+                        }
                       >
                         <Text variant="label" fontSize={10} color="neutral50">
                           {order.type.toUpperCase()}
@@ -148,11 +177,19 @@ export default function OrdersScreen() {
                     Items: {order.order_details.length}
                   </Text>
                   {(order.due_date || order.timeline) && (
-                    <Text variant="body" color="primary900" fontSize={14} marginTop="xs">
-                      Due: {new Date(order.due_date || order.timeline!).toLocaleDateString("en-US", {
+                    <Text
+                      variant="body"
+                      color="primary900"
+                      fontSize={14}
+                      marginTop="xs"
+                    >
+                      Due:{" "}
+                      {new Date(
+                        order.due_date || order.timeline!
+                      ).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
-                        year: "numeric"
+                        year: "numeric",
                       })}
                     </Text>
                   )}
@@ -186,7 +223,7 @@ export default function OrdersScreen() {
           </Text>
         </Box>
       </TouchableOpacity>
-    </Box>
+    </SafeAreaView>
   );
 }
 
