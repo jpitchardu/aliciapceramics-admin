@@ -51,7 +51,10 @@ export default function WeekView() {
     return Array.from(grouped.entries()).map(([date, tasks]) => ({
       date,
       tasks,
-      totalHours: tasks.reduce((sum, task) => sum + (task.estimated_hours || 0), 0),
+      totalHours: tasks.reduce(
+        (sum, task) => sum + (task.estimated_hours || 0),
+        0
+      ),
     }));
   }, [tasksResponse.data, tasksResponse.isSuccess]);
 
@@ -93,7 +96,7 @@ export default function WeekView() {
             textAlign="center"
             marginTop="s"
           >
-            The schedule hasn't been generated yet
+            The schedule has not been generated yet
           </Text>
         </Box>
       </Box>

@@ -7,7 +7,12 @@ import { useCompleteTask } from "@/hooks/useCompleteTask";
 import { useRegenerateSchedule } from "@/hooks/useRegenerateSchedule";
 import { useRouter } from "expo-router";
 import { memo, useCallback } from "react";
-import { ScrollView, ActivityIndicator, Alert, TouchableOpacity } from "react-native";
+import {
+  ScrollView,
+  ActivityIndicator,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -20,14 +25,14 @@ export default function Dashboard() {
     (orderId: string) => {
       router.push(`/orders/${orderId}`);
     },
-    [router],
+    [router]
   );
 
   const onConversationPress = useCallback(
     (customerId: string) => {
       router.push(`/customers/${customerId}/conversation`);
     },
-    [router],
+    [router]
   );
 
   const onCompleteTask = useCallback(
@@ -45,7 +50,7 @@ export default function Dashboard() {
         },
       ]);
     },
-    [completeTaskMutation],
+    [completeTaskMutation]
   );
 
   const onRegenerateSchedule = useCallback(() => {
@@ -92,7 +97,7 @@ export default function Dashboard() {
         alignItems="center"
       >
         <Text variant="body" color="alert600" textAlign="center">
-          Error loading dashboard
+          Error loading dashboard, {JSON.stringify(tasksResponse.error)}
         </Text>
       </Box>
     );
@@ -133,7 +138,9 @@ export default function Dashboard() {
                 alignItems="center"
                 justifyContent="space-between"
               >
-                <Text variant="heading">Today&apos;s Tasks ({tasks.length})</Text>
+                <Text variant="heading">
+                  Today&apos;s Tasks ({tasks.length})
+                </Text>
                 <TouchableOpacity
                   onPress={onRegenerateSchedule}
                   disabled={regenerateScheduleMutation.isPending}
@@ -173,11 +180,7 @@ export default function Dashboard() {
                 alignItems="center"
                 paddingVertical="xl"
               >
-                <Text
-                  variant="heading"
-                  color="neutral600"
-                  textAlign="center"
-                >
+                <Text variant="heading" color="neutral600" textAlign="center">
                   All caught up! 🎉
                 </Text>
                 <Text
@@ -193,7 +196,9 @@ export default function Dashboard() {
 
           <Box gap="s" marginTop="l">
             <Text variant="heading">Quick Actions</Text>
-            <TouchableOpacity onPress={() => router.push("/availability/index" as any)}>
+            <TouchableOpacity
+              onPress={() => router.push("/availability")}
+            >
               <Box
                 backgroundColor="neutral50"
                 padding="m"
