@@ -1,16 +1,24 @@
 import { Box, Text } from "@/components";
-import { useOrders, Order } from "@/hooks/useOrders";
-import { Host } from "@expo/ui/swift-ui";
-import { useRouter } from "expo-router";
-import {
-  ScrollView,
-  ActivityIndicator,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
-import { useMemo, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useOrders } from "@/hooks/useOrders";
 import { theme } from "@/theme";
+import {
+  Host,
+  HStack,
+  Spacer,
+  Text as UIText,
+  VStack,
+} from "@expo/ui/swift-ui";
+import { background } from "@expo/ui/swift-ui/modifiers";
+
+import { useRouter } from "expo-router";
+import { useMemo, useState } from "react";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type FilterType = "all" | "commissioned" | "storefront" | "cancelled";
 
@@ -113,13 +121,64 @@ export default function OrdersScreen() {
         backgroundColor: theme.colors.primary50,
       }}
     >
-      <ScrollView style={{ flex: 1 }}>
-        <Host matchContents>
-          <Text variant="title" paddingTop="xxl">
-            Orders
-          </Text>
+      <ScrollView>
+        <Host
+          matchContents
+          style={{ flex: 1, backgroundColor: theme.colors.primary50 }}
+          colorScheme={"light"}
+          modifiers={[background(theme.colors.primary50)]}
+        >
+          <VStack modifiers={[background(theme.colors.primary50)]}>
+            <UIText color={theme.colors.primary900}>Orders</UIText>
+            {filteredAndSortedOrders.map((order) => (
+              <VStack
+                key={order.id}
+                alignment="leading"
+                modifiers={[background(theme.colors.primary50)]}
+              >
+                <HStack>
+                  <UIText color={theme.colors.primary900}>
+                    {order.customers?.name || order.name || "Order"}
+                  </UIText>
+                  <Spacer />
+                  {order.type && (
+                    <VStack
+                      backgroundColor={
+                        order.type === "commissioned"
+                          ? "interactive300"
+                          : "input300"
+                      }
+                    >
+                      <UIText color={theme.colors.primary900}>
+                        {order.type.toUpperCase()}
+                      </UIText>
+                    </VStack>
+                  )}
+                </HStack>
+                <UIText color={theme.colors.primary900}>
+                  {order.status ?? "pending"}
+                </UIText>
+                <UIText color={theme.colors.primary900}>
+                  {order.order_details.length.toString()}
+                </UIText>
+                {(order.due_date || order.timeline) && (
+                  <UIText color={theme.colors.primary900}>
+                    Due:
+                    {/* {new Date(
+                        order.due_date || order.timeline!
+                      ).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })} */}
+                  </UIText>
+                )}
+              </VStack>
+            ))}
+          </VStack>
         </Host>
-        <Box paddingHorizontal="m" paddingTop="m" paddingBottom="s">
+      </ScrollView>
+      {/* <Box paddingHorizontal="m" paddingTop="m" paddingBottom="s">
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <Box flexDirection="row" gap="s">
               <FilterPill filter="all" label="All" />
@@ -203,8 +262,7 @@ export default function OrdersScreen() {
               </Text>
             </Box>
           )}
-        </Box>
-      </ScrollView>
+        </Box> */}
 
       <TouchableOpacity
         style={styles.fab}
