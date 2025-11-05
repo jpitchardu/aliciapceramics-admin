@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@aliciap/ui':
+        specifier: file:./modules/ui
+        version: ui@file:modules/ui(expo@54.0.13)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.12)(react@19.1.0))(react@19.1.0)
       '@expo/html-elements':
         specifier: ^0.10.1
         version: 0.10.1
@@ -6140,6 +6143,13 @@ packages:
     resolution: {integrity: sha512-v3Xu+yuwBXisp6QYTcH4UbH+xYJXqnq2m/LtQVWKWzYc1iehYnLixoQDN9FH6/j9/oybfd6W9Ghwkl8+UMKTKQ==}
     engines: {node: '>=0.8.0'}
     hasBin: true
+
+  ui@file:modules/ui:
+    resolution: {directory: modules/ui, type: directory}
+    peerDependencies:
+      expo: '*'
+      react: '*'
+      react-native: '*'
 
   unbox-primitive@1.1.0:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}
@@ -14240,6 +14250,12 @@ snapshots:
 
   uglify-js@3.19.3:
     optional: true
+
+  ui@file:modules/ui(expo@54.0.13)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.12)(react@19.1.0))(react@19.1.0):
+    dependencies:
+      expo: 54.0.13(@babel/core@7.28.4)(@expo/metro-runtime@6.1.1)(expo-router@6.0.12)(react-native-webview@13.15.0(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.12)(react@19.1.0))(react@19.1.0))(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.12)(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-native: 0.81.4(@babel/core@7.28.4)(@types/react@19.1.12)(react@19.1.0)
 
   unbox-primitive@1.1.0:
     dependencies:
