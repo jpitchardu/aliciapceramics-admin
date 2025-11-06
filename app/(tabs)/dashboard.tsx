@@ -1,20 +1,21 @@
 import { Box, Text } from "@/components";
-import { TaskCard } from "@/components/dashboard/TaskCard";
 import { ConversationCard } from "@/components/dashboard/ConversationCard";
-import { useTodaysTasks } from "@/hooks/useTodaysTasks";
-import { useUnreadConversations } from "@/hooks/useUnreadConversations";
+import { TaskCard } from "@/components/dashboard/TaskCard";
 import { useCompleteTask } from "@/hooks/useCompleteTask";
 import { useRegenerateSchedule } from "@/hooks/useRegenerateSchedule";
+import { useTodaysTasks } from "@/hooks/useTodaysTasks";
+import { useUnreadConversations } from "@/hooks/useUnreadConversations";
+import { GlassButton } from "@/modules/ui/src";
+import { theme } from "@/theme";
 import { useRouter } from "expo-router";
-import { ComponentProps, memo, useCallback } from "react";
+import { memo, useCallback } from "react";
 import {
-  ScrollView,
   ActivityIndicator,
   Alert,
+  ScrollView,
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { theme } from "@/theme";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -112,6 +113,7 @@ export default function Dashboard() {
         <Text variant="title" paddingTop="xxl">
           Dashboard
         </Text>
+        <GlassButton label="Button" icon="home" onPress={() => {}} />
         <Box padding="m" gap="l">
           {conversations && conversations.length > 0 && (
             <Box gap="s">
