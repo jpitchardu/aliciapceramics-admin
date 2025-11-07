@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		060FAD859323D2F5936D677F /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9500A03BF98D1E7137E86F74 /* ExpoModulesProvider.swift */; };
-		067C0EE5FA14A9857D7D8A0C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B6AE627B3853AAA44966E907 /* PrivacyInfo.xcprivacy */; };
+		0068D8DF5860EDA6B1DC5005 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 15B990AD31EE0F2C5537E9D8 /* PrivacyInfo.xcprivacy */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		33AA59ECA36D226771F930A5 /* libPods-aliciapceramicsadmin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 45039FE517CD5810725023DC /* libPods-aliciapceramicsadmin.a */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
+		6DE825819EACCB11D6F98E3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6ED5A00CFB7706A9A68BAC /* ExpoModulesProvider.swift */; };
+		B83CB8A92ADA4D8A0B41B947 /* libPods-aliciapceramicsadmin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FCC4351E43F290903FFEE038 /* libPods-aliciapceramicsadmin.a */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
@@ -20,16 +20,16 @@
 		13B07F961A680F5B00A75B9A /* aliciapceramicsadmin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = aliciapceramicsadmin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = aliciapceramicsadmin/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = aliciapceramicsadmin/Info.plist; sourceTree = "<group>"; };
-		1A6F2C0CB485B01BBB4BD9E0 /* Pods-aliciapceramicsadmin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aliciapceramicsadmin.debug.xcconfig"; path = "Target Support Files/Pods-aliciapceramicsadmin/Pods-aliciapceramicsadmin.debug.xcconfig"; sourceTree = "<group>"; };
-		45039FE517CD5810725023DC /* libPods-aliciapceramicsadmin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aliciapceramicsadmin.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		71E8A2CD0BAA77B4B685EE34 /* Pods-aliciapceramicsadmin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aliciapceramicsadmin.release.xcconfig"; path = "Target Support Files/Pods-aliciapceramicsadmin/Pods-aliciapceramicsadmin.release.xcconfig"; sourceTree = "<group>"; };
-		9500A03BF98D1E7137E86F74 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-aliciapceramicsadmin/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		15B990AD31EE0F2C5537E9D8 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = aliciapceramicsadmin/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		9A6ED5A00CFB7706A9A68BAC /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-aliciapceramicsadmin/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = aliciapceramicsadmin/SplashScreen.storyboard; sourceTree = "<group>"; };
-		B6AE627B3853AAA44966E907 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = aliciapceramicsadmin/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
+		C92F59C88FF91305B094C680 /* Pods-aliciapceramicsadmin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aliciapceramicsadmin.debug.xcconfig"; path = "Target Support Files/Pods-aliciapceramicsadmin/Pods-aliciapceramicsadmin.debug.xcconfig"; sourceTree = "<group>"; };
+		E0092F3B66F07DEB45056958 /* Pods-aliciapceramicsadmin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aliciapceramicsadmin.release.xcconfig"; path = "Target Support Files/Pods-aliciapceramicsadmin/Pods-aliciapceramicsadmin.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = aliciapceramicsadmin/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* aliciapceramicsadmin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "aliciapceramicsadmin-Bridging-Header.h"; path = "aliciapceramicsadmin/aliciapceramicsadmin-Bridging-Header.h"; sourceTree = "<group>"; };
+		FCC4351E43F290903FFEE038 /* libPods-aliciapceramicsadmin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aliciapceramicsadmin.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				33AA59ECA36D226771F930A5 /* libPods-aliciapceramicsadmin.a in Frameworks */,
+				B83CB8A92ADA4D8A0B41B947 /* libPods-aliciapceramicsadmin.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,7 +53,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				B6AE627B3853AAA44966E907 /* PrivacyInfo.xcprivacy */,
+				15B990AD31EE0F2C5537E9D8 /* PrivacyInfo.xcprivacy */,
 			);
 			name = aliciapceramicsadmin;
 			sourceTree = "<group>";
@@ -62,9 +62,17 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				45039FE517CD5810725023DC /* libPods-aliciapceramicsadmin.a */,
+				FCC4351E43F290903FFEE038 /* libPods-aliciapceramicsadmin.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7B02CEB0DCE65685171E88E2 /* aliciapceramicsadmin */ = {
+			isa = PBXGroup;
+			children = (
+				9A6ED5A00CFB7706A9A68BAC /* ExpoModulesProvider.swift */,
+			);
+			name = aliciapceramicsadmin;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -74,6 +82,14 @@
 			name = Libraries;
 			sourceTree = "<group>";
 		};
+		83442FD7FE3B1E81C5699C83 /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				7B02CEB0DCE65685171E88E2 /* aliciapceramicsadmin */,
+			);
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
@@ -81,8 +97,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				CA9F706F3D941D72ADFE7244 /* Pods */,
-				C97B8E6B45A6E93A2CA6F687 /* ExpoModulesProviders */,
+				C3EB266652A33B6581096ED2 /* Pods */,
+				83442FD7FE3B1E81C5699C83 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -97,14 +113,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		AA2E19844D5308006C56501B /* aliciapceramicsadmin */ = {
-			isa = PBXGroup;
-			children = (
-				9500A03BF98D1E7137E86F74 /* ExpoModulesProvider.swift */,
-			);
-			name = aliciapceramicsadmin;
-			sourceTree = "<group>";
-		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
@@ -114,19 +122,11 @@
 			path = aliciapceramicsadmin/Supporting;
 			sourceTree = "<group>";
 		};
-		C97B8E6B45A6E93A2CA6F687 /* ExpoModulesProviders */ = {
+		C3EB266652A33B6581096ED2 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				AA2E19844D5308006C56501B /* aliciapceramicsadmin */,
-			);
-			name = ExpoModulesProviders;
-			sourceTree = "<group>";
-		};
-		CA9F706F3D941D72ADFE7244 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				1A6F2C0CB485B01BBB4BD9E0 /* Pods-aliciapceramicsadmin.debug.xcconfig */,
-				71E8A2CD0BAA77B4B685EE34 /* Pods-aliciapceramicsadmin.release.xcconfig */,
+				C92F59C88FF91305B094C680 /* Pods-aliciapceramicsadmin.debug.xcconfig */,
+				E0092F3B66F07DEB45056958 /* Pods-aliciapceramicsadmin.release.xcconfig */,
 			);
 			name = Pods;
 			path = Pods;
@@ -140,13 +140,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "aliciapceramicsadmin" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				692B570D1334C209DDCCA2BE /* [Expo] Configure project */,
+				5F91EE08C8750BC07AB62684 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				4DE347075A8AA44B4FD7C764 /* [CP] Embed Pods Frameworks */,
+				1FDE4C2EE29F2D496FC3DE02 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -198,7 +198,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				067C0EE5FA14A9857D7D8A0C /* PrivacyInfo.xcprivacy in Resources */,
+				0068D8DF5860EDA6B1DC5005 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,7 +244,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4DE347075A8AA44B4FD7C764 /* [CP] Embed Pods Frameworks */ = {
+		1FDE4C2EE29F2D496FC3DE02 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -266,7 +266,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-aliciapceramicsadmin/Pods-aliciapceramicsadmin-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		692B570D1334C209DDCCA2BE /* [Expo] Configure project */ = {
+		5F91EE08C8750BC07AB62684 /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -336,7 +336,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				060FAD859323D2F5936D677F /* ExpoModulesProvider.swift in Sources */,
+				6DE825819EACCB11D6F98E3D /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,7 +345,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A6F2C0CB485B01BBB4BD9E0 /* Pods-aliciapceramicsadmin.debug.xcconfig */;
+			baseConfigurationReference = C92F59C88FF91305B094C680 /* Pods-aliciapceramicsadmin.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -384,7 +384,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 71E8A2CD0BAA77B4B685EE34 /* Pods-aliciapceramicsadmin.release.xcconfig */;
+			baseConfigurationReference = E0092F3B66F07DEB45056958 /* Pods-aliciapceramicsadmin.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

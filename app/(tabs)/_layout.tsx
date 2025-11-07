@@ -1,29 +1,38 @@
-import { NativeTabs, Label, Icon } from "expo-router/unstable-native-tabs";
-import { theme } from "@/theme";
+import { Tabs } from "expo-router";
+import { TabBar } from "@/components/TabBar";
 
 export default function TabLayout() {
   return (
-    <NativeTabs
-      backgroundColor={theme.colors.primary100}
-      iconColor={theme.colors.primary900}
-      minimizeBehavior="onScrollDown"
+    <Tabs
+      tabBar={(props) => <TabBar {...props} />}
+      screenOptions={{
+        headerShown: false,
+      }}
     >
-      <NativeTabs.Trigger name="dashboard">
-        <Label hidden />
-        <Icon sf={{ default: "house", selected: "house.fill" }} />
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="orders">
-        <Label hidden />
-        <Icon sf={"list.bullet"} />
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="conversations">
-        <Label hidden />
-        <Icon sf={{ default: "bubble.left", selected: "bubble.left.fill" }} />
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="week">
-        <Label hidden />
-        <Icon sf={"calendar"} />
-      </NativeTabs.Trigger>
-    </NativeTabs>
+      <Tabs.Screen
+        name="dashboard"
+        options={{
+          title: "Dashboard",
+        }}
+      />
+      <Tabs.Screen
+        name="orders"
+        options={{
+          title: "Orders",
+        }}
+      />
+      <Tabs.Screen
+        name="conversations"
+        options={{
+          title: "Conversations",
+        }}
+      />
+      <Tabs.Screen
+        name="week"
+        options={{
+          title: "Week",
+        }}
+      />
+    </Tabs>
   );
 }

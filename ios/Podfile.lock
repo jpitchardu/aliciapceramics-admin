@@ -2338,8 +2338,6 @@ PODS:
   - SDWebImageWebPCoder (0.14.6):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.17)
-  - UI (0.1.0):
-    - ExpoModulesCore
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -2445,7 +2443,6 @@ DEPENDENCIES:
   - "RNScreens (from `../node_modules/.pnpm/react-native-screens@4.16.0_react-native@0.81.4_@babel+core@7.28.4_@types+react@19.1.12_react@19.1.0__react@19.1.0/node_modules/react-native-screens`)"
   - "RNSVG (from `../node_modules/.pnpm/react-native-svg@15.12.1_react-native@0.81.4_@babel+core@7.28.4_@types+react@19.1.12_react@19.1.0__react@19.1.0/node_modules/react-native-svg`)"
   - "RNWorklets (from `../node_modules/.pnpm/react-native-worklets@0.5.1_@babel+core@7.28.4_react-native@0.81.4_@babel+core@7.28.4_@_472d35c549b1e8b9ac050702192fa313/node_modules/react-native-worklets`)"
-  - UI (from `../modules/ui/ios`)
   - "Yoga (from `../node_modules/.pnpm/react-native@0.81.4_@babel+core@7.28.4_@types+react@19.1.12_react@19.1.0/node_modules/react-native/ReactCommon/yoga`)"
 
 SPEC REPOS:
@@ -2662,8 +2659,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/.pnpm/react-native-svg@15.12.1_react-native@0.81.4_@babel+core@7.28.4_@types+react@19.1.12_react@19.1.0__react@19.1.0/node_modules/react-native-svg"
   RNWorklets:
     :path: "../node_modules/.pnpm/react-native-worklets@0.5.1_@babel+core@7.28.4_react-native@0.81.4_@babel+core@7.28.4_@_472d35c549b1e8b9ac050702192fa313/node_modules/react-native-worklets"
-  UI:
-    :path: "../modules/ui/ios"
   Yoga:
     :path: "../node_modules/.pnpm/react-native@0.81.4_@babel+core@7.28.4_@types+react@19.1.12_react@19.1.0/node_modules/react-native/ReactCommon/yoga"
 
@@ -2776,7 +2771,6 @@ SPEC CHECKSUMS:
   SDWebImageAVIFCoder: afe194a084e851f70228e4be35ef651df0fc5c57
   SDWebImageSVGCoder: 15a300a97ec1c8ac958f009c02220ac0402e936c
   SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
-  UI: 78c2fcb2ca4e6c9b71e1224ed8af38ed0ddef58e
   Yoga: c8f1aad5bc3522a8fdab409b5843965abff35aa6
 
 PODFILE CHECKSUM: 0e992fc14ee7cdaec55432f249713ebacbaf1798

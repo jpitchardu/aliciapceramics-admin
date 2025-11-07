@@ -1,14 +1,6 @@
 import { Box, Text } from "@/components";
 import { useOrders } from "@/hooks/useOrders";
 import { theme } from "@/theme";
-import {
-  Host,
-  HStack,
-  Spacer,
-  Text as UIText,
-  VStack,
-} from "@expo/ui/swift-ui";
-import { background } from "@expo/ui/swift-ui/modifiers";
 
 import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
@@ -64,7 +56,7 @@ export default function OrdersScreen() {
         padding="l"
       >
         <Text variant="heading" color="alert600" textAlign="center">
-          Error Loading Orders, {}
+          Error Loading Orders
         </Text>
       </Box>
     );
@@ -121,148 +113,91 @@ export default function OrdersScreen() {
         backgroundColor: theme.colors.primary50,
       }}
     >
-      <ScrollView>
-        <Host
-          matchContents
-          style={{ flex: 1, backgroundColor: theme.colors.primary50 }}
-          colorScheme={"light"}
-          modifiers={[background(theme.colors.primary50)]}
-        >
-          <VStack modifiers={[background(theme.colors.primary50)]}>
-            <UIText color={theme.colors.primary900}>Orders</UIText>
-            {filteredAndSortedOrders.map((order) => (
-              <VStack
-                key={order.id}
-                alignment="leading"
-                modifiers={[background(theme.colors.primary50)]}
+      <Box paddingHorizontal="m" paddingTop="m" paddingBottom="s">
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <Box flexDirection="row" gap="s">
+            <FilterPill filter="all" label="All" />
+            <FilterPill filter="commissioned" label="Commissions" />
+            <FilterPill filter="storefront" label="Storefront" />
+            <FilterPill filter="cancelled" label="Cancelled" />
+          </Box>
+        </ScrollView>
+      </Box>
+
+      <Box padding="m" gap="s">
+        {filteredAndSortedOrders && filteredAndSortedOrders.length > 0 ? (
+          filteredAndSortedOrders.map((order) => (
+            <TouchableOpacity
+              key={order.id}
+              onPress={() => router.push(`/orders/${order.id}`)}
+            >
+              <Box
+                backgroundColor="neutral50"
+                padding="m"
+                borderRadius="m"
+                borderWidth={1}
+                borderColor="neutral200"
               >
-                <HStack>
-                  <UIText color={theme.colors.primary900}>
+                <Box
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  marginBottom="xs"
+                >
+                  <Text variant="heading">
                     {order.customers?.name || order.name || "Order"}
-                  </UIText>
-                  <Spacer />
+                  </Text>
                   {order.type && (
-                    <VStack
+                    <Box
+                      paddingHorizontal="s"
+                      paddingVertical="xs"
+                      borderRadius="s"
                       backgroundColor={
                         order.type === "commissioned"
                           ? "interactive300"
                           : "input300"
                       }
                     >
-                      <UIText color={theme.colors.primary900}>
+                      <Text variant="label" fontSize={10} color="neutral50">
                         {order.type.toUpperCase()}
-                      </UIText>
-                    </VStack>
-                  )}
-                </HStack>
-                <UIText color={theme.colors.primary900}>
-                  {order.status ?? "pending"}
-                </UIText>
-                <UIText color={theme.colors.primary900}>
-                  {order.order_details.length.toString()}
-                </UIText>
-                {(order.due_date || order.timeline) && (
-                  <UIText color={theme.colors.primary900}>
-                    Due:
-                    {/* {new Date(
-                        order.due_date || order.timeline!
-                      ).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })} */}
-                  </UIText>
-                )}
-              </VStack>
-            ))}
-          </VStack>
-        </Host>
-      </ScrollView>
-      {/* <Box paddingHorizontal="m" paddingTop="m" paddingBottom="s">
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <Box flexDirection="row" gap="s">
-              <FilterPill filter="all" label="All" />
-              <FilterPill filter="commissioned" label="Commissions" />
-              <FilterPill filter="storefront" label="Storefront" />
-              <FilterPill filter="cancelled" label="Cancelled" />
-            </Box>
-          </ScrollView>
-        </Box>
-
-        <Box padding="m" gap="s">
-          {filteredAndSortedOrders && filteredAndSortedOrders.length > 0 ? (
-            filteredAndSortedOrders.map((order) => (
-              <TouchableOpacity
-                key={order.id}
-                onPress={() => router.push(`/orders/${order.id}`)}
-              >
-                <Box
-                  backgroundColor="neutral50"
-                  padding="m"
-                  borderRadius="m"
-                  borderWidth={1}
-                  borderColor="neutral200"
-                >
-                  <Box
-                    flexDirection="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    marginBottom="xs"
-                  >
-                    <Text variant="heading">
-                      {order.customers?.name || order.name || "Order"}
-                    </Text>
-                    {order.type && (
-                      <Box
-                        paddingHorizontal="s"
-                        paddingVertical="xs"
-                        borderRadius="s"
-                        backgroundColor={
-                          order.type === "commissioned"
-                            ? "interactive300"
-                            : "input300"
-                        }
-                      >
-                        <Text variant="label" fontSize={10} color="neutral50">
-                          {order.type.toUpperCase()}
-                        </Text>
-                      </Box>
-                    )}
-                  </Box>
-                  <Text variant="body" color="neutral600" fontSize={14}>
-                    Status: {order.status || "pending"}
-                  </Text>
-                  <Text variant="body" color="neutral600" fontSize={14}>
-                    Items: {order.order_details.length}
-                  </Text>
-                  {(order.due_date || order.timeline) && (
-                    <Text
-                      variant="body"
-                      color="primary900"
-                      fontSize={14}
-                      marginTop="xs"
-                    >
-                      Due:{" "}
-                      {new Date(
-                        order.due_date || order.timeline!
-                      ).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </Text>
+                      </Text>
+                    </Box>
                   )}
                 </Box>
-              </TouchableOpacity>
-            ))
-          ) : (
-            <Box paddingVertical="xl" alignItems="center">
-              <Text variant="heading" color="neutral600" textAlign="center">
-                No orders found
-              </Text>
-            </Box>
-          )}
-        </Box> */}
+                <Text variant="body" color="neutral600" fontSize={14}>
+                  Status: {order.status || "pending"}
+                </Text>
+                <Text variant="body" color="neutral600" fontSize={14}>
+                  Items: {order.order_details.length}
+                </Text>
+                {(order.due_date || order.timeline) && (
+                  <Text
+                    variant="body"
+                    color="primary900"
+                    fontSize={14}
+                    marginTop="xs"
+                  >
+                    Due:{" "}
+                    {new Date(
+                      order.due_date || order.timeline!
+                    ).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </Text>
+                )}
+              </Box>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Box paddingVertical="xl" alignItems="center">
+            <Text variant="heading" color="neutral600" textAlign="center">
+              No orders found
+            </Text>
+          </Box>
+        )}
+      </Box>
 
       <TouchableOpacity
         style={styles.fab}

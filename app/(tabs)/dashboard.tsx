@@ -5,7 +5,6 @@ import { useCompleteTask } from "@/hooks/useCompleteTask";
 import { useRegenerateSchedule } from "@/hooks/useRegenerateSchedule";
 import { useTodaysTasks } from "@/hooks/useTodaysTasks";
 import { useUnreadConversations } from "@/hooks/useUnreadConversations";
-import { GlassButton } from "@/modules/ui/src";
 import { theme } from "@/theme";
 import { useRouter } from "expo-router";
 import { memo, useCallback } from "react";
@@ -113,7 +112,6 @@ export default function Dashboard() {
         <Text variant="title" paddingTop="xxl">
           Dashboard
         </Text>
-        <GlassButton label="Button" icon="home" onPress={() => {}} />
         <Box padding="m" gap="l">
           {conversations && conversations.length > 0 && (
             <Box gap="s">
