@@ -125,78 +125,80 @@ export default function OrdersScreen() {
       </Box>
 
       <Box padding="m" gap="s">
-        {filteredAndSortedOrders && filteredAndSortedOrders.length > 0 ? (
-          filteredAndSortedOrders.map((order) => (
-            <TouchableOpacity
-              key={order.id}
-              onPress={() => router.push(`/orders/${order.id}`)}
-            >
-              <Box
-                backgroundColor="neutral50"
-                padding="m"
-                borderRadius="m"
-                borderWidth={1}
-                borderColor="neutral200"
+        <ScrollView>
+          {filteredAndSortedOrders && filteredAndSortedOrders.length > 0 ? (
+            filteredAndSortedOrders.map((order) => (
+              <TouchableOpacity
+                key={order.id}
+                onPress={() => router.push(`/orders/${order.id}`)}
               >
                 <Box
-                  flexDirection="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  marginBottom="xs"
+                  backgroundColor="neutral50"
+                  padding="m"
+                  borderRadius="m"
+                  borderWidth={1}
+                  borderColor="neutral200"
                 >
-                  <Text variant="heading">
-                    {order.customers?.name || order.name || "Order"}
+                  <Box
+                    flexDirection="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    marginBottom="xs"
+                  >
+                    <Text variant="heading">
+                      {order.customers?.name || order.name || "Order"}
+                    </Text>
+                    {order.type && (
+                      <Box
+                        paddingHorizontal="s"
+                        paddingVertical="xs"
+                        borderRadius="s"
+                        backgroundColor={
+                          order.type === "commissioned"
+                            ? "interactive300"
+                            : "input300"
+                        }
+                      >
+                        <Text variant="label" fontSize={10} color="neutral50">
+                          {order.type.toUpperCase()}
+                        </Text>
+                      </Box>
+                    )}
+                  </Box>
+                  <Text variant="body" color="neutral600" fontSize={14}>
+                    Status: {order.status || "pending"}
                   </Text>
-                  {order.type && (
-                    <Box
-                      paddingHorizontal="s"
-                      paddingVertical="xs"
-                      borderRadius="s"
-                      backgroundColor={
-                        order.type === "commissioned"
-                          ? "interactive300"
-                          : "input300"
-                      }
+                  <Text variant="body" color="neutral600" fontSize={14}>
+                    Items: {order.order_details.length}
+                  </Text>
+                  {(order.due_date || order.timeline) && (
+                    <Text
+                      variant="body"
+                      color="primary900"
+                      fontSize={14}
+                      marginTop="xs"
                     >
-                      <Text variant="label" fontSize={10} color="neutral50">
-                        {order.type.toUpperCase()}
-                      </Text>
-                    </Box>
+                      Due:{" "}
+                      {new Date(
+                        order.due_date || order.timeline!
+                      ).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </Text>
                   )}
                 </Box>
-                <Text variant="body" color="neutral600" fontSize={14}>
-                  Status: {order.status || "pending"}
-                </Text>
-                <Text variant="body" color="neutral600" fontSize={14}>
-                  Items: {order.order_details.length}
-                </Text>
-                {(order.due_date || order.timeline) && (
-                  <Text
-                    variant="body"
-                    color="primary900"
-                    fontSize={14}
-                    marginTop="xs"
-                  >
-                    Due:{" "}
-                    {new Date(
-                      order.due_date || order.timeline!
-                    ).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </Text>
-                )}
-              </Box>
-            </TouchableOpacity>
-          ))
-        ) : (
-          <Box paddingVertical="xl" alignItems="center">
-            <Text variant="heading" color="neutral600" textAlign="center">
-              No orders found
-            </Text>
-          </Box>
-        )}
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Box paddingVertical="xl" alignItems="center">
+              <Text variant="heading" color="neutral600" textAlign="center">
+                No orders found
+              </Text>
+            </Box>
+          )}
+        </ScrollView>
       </Box>
 
       <TouchableOpacity

@@ -1,5 +1,6 @@
 import { theme } from "@/theme";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { BlurView } from "expo-blur";
 import { SFSymbol, SymbolView } from "expo-symbols";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
@@ -15,7 +16,7 @@ const TAB_ICONS: Record<TabRoute, { default: SFSymbol; selected: SFSymbol }> = {
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   return (
     <View style={styles.container}>
-      <BlurView />
+      <BlurView intensity={10} style={styles.blurContainer} tint="prominent" />
       <View style={styles.tabBar}>
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
@@ -51,7 +52,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
               accessibilityLabel={options.tabBarAccessibilityLabel}
               onPress={onPress}
               onLongPress={onLongPress}
-              style={styles.tab}
+              style={[styles.tab, isFocused && styles.tabSelected]}
             >
               <SymbolView
                 name={icon}
@@ -75,14 +76,22 @@ const styles = StyleSheet.create({
     left: 16,
     right: 16,
     alignItems: "center",
+    overflow: "hidden",
+    borderRadius: theme.borderRadii.l,
+  },
+  blurContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: theme.borderRadii.l,
   },
   tabBar: {
+    zIndex: 1,
     flexDirection: "row",
     backgroundColor: `${theme.colors.primary100}95`,
-    backgroundBlendMode: "blur",
-    borderRadius: 20,
-    paddingVertical: 12,
-    paddingHorizontal: 8,
+    borderRadius: theme.borderRadii.l,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -96,7 +105,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 8,
+    paddingVertical: theme.spacing.m,
+  },
+  tabSelected: {
+    backgroundColor: theme.colors.input400,
+    borderRadius: theme.borderRadii.m,
   },
   icon: {
     width: 24,
