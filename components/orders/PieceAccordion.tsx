@@ -1,15 +1,22 @@
 import { Tables } from "@/api/dbTypes";
 import { Box, Text } from "@/components";
-import { UpdateProgressModal } from "./UpdateProgressModal";
 import { useState } from "react";
 import { TouchableOpacity } from "react-native";
+import { UpdateProgressModal } from "./UpdateProgressModal";
 
 interface PieceAccordionProps {
   piece: Tables<"order_details">;
-  onUpdateProgress?: (orderDetailId: string, status?: string, completedQuantity?: number) => void;
+  onUpdateProgress?: (
+    orderDetailId: string,
+    status?: string,
+    completedQuantity?: number
+  ) => void;
 }
 
-export function PieceAccordion({ piece, onUpdateProgress }: PieceAccordionProps) {
+export function PieceAccordion({
+  piece,
+  onUpdateProgress,
+}: PieceAccordionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
@@ -42,7 +49,7 @@ export function PieceAccordion({ piece, onUpdateProgress }: PieceAccordionProps)
             <Box flex={1}>
               <Box flexDirection="row" alignItems="center" gap="s">
                 <Text variant="label">{piece.type}</Text>
-                {piece.size && <Text variant="body">• {piece.size}</Text>}
+                {piece.size && <Text variant="label">• {piece.size} oz.</Text>}
               </Box>
             </Box>
             <Box

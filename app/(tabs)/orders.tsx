@@ -1,23 +1,71 @@
 import { Box, Text } from "@/components";
 import { useOrders } from "@/hooks/useOrders";
-import { theme } from "@/theme";
 
-import { useRouter } from "expo-router";
-import { useMemo, useState } from "react";
+import { useScroll } from "@/contexts/ScrollContext";
+import { theme } from "@/theme";
+import { ScreenContainer } from "@/ui/ScreenContainer";
+import { BlurView } from "expo-blur";
+import { useNavigation, useRouter } from "expo-router";
+import { SymbolView } from "expo-symbols";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 type FilterType = "all" | "commissioned" | "storefront" | "cancelled";
 
 export default function OrdersScreen() {
   const router = useRouter();
+  const navigation = useNavigation();
   const { data: orders, isLoading, isError, error } = useOrders();
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
+  const { setScrollY } = useScroll();
+
+  const ActionButton = useMemo(
+    () =>
+      function ActionButton() {
+        return (
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="New order"
+            onPress={() => router.push("/storefront/create")}
+            style={styles.tab}
+          >
+            <BlurView
+              intensity={15}
+              style={styles.blurContainer}
+              tint="prominent"
+            />
+            <SymbolView
+              name="plus"
+              size={24}
+              type="hierarchical"
+              tintColor={theme.colors.primary900}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+        );
+      },
+    [router]
+  );
+
+  useEffect(() => {
+    navigation.setOptions({
+      tabBarActionButton: ActionButton,
+    });
+  }, [navigation, ActionButton]);
+
+  const handleScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      setScrollY(event.nativeEvent.contentOffset.y);
+    },
+    [setScrollY]
+  );
 
   const filteredAndSortedOrders = useMemo(() => {
     if (!orders) return [];
@@ -96,7 +144,7 @@ export default function OrdersScreen() {
       >
         <Text
           variant="label"
-          color={activeFilter === filter ? "neutral50" : "neutral600"}
+          color={activeFilter === filter ? "neutral50" : "primary700"}
           fontSize={12}
         >
           {label}
@@ -106,14 +154,11 @@ export default function OrdersScreen() {
   );
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        paddingHorizontal: theme.spacing.m,
-        backgroundColor: theme.colors.primary50,
-      }}
-    >
-      <Box paddingHorizontal="m" paddingTop="m" paddingBottom="s">
+    <ScreenContainer>
+      <Text variant="title" paddingTop="xxl">
+        Orders
+      </Text>
+      <Box paddingHorizontal="xs" paddingTop="m" paddingBottom="m">
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <Box flexDirection="row" gap="s">
             <FilterPill filter="all" label="All" />
@@ -124,8 +169,13 @@ export default function OrdersScreen() {
         </ScrollView>
       </Box>
 
-      <Box padding="m" gap="s">
-        <ScrollView>
+      <Box paddingHorizontal="xs" gap="s" flex={1}>
+        <ScrollView
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          contentContainerStyle={{ paddingBottom: 90, gap: 8 }}
+          showsVerticalScrollIndicator={false}
+        >
           {filteredAndSortedOrders && filteredAndSortedOrders.length > 0 ? (
             filteredAndSortedOrders.map((order) => (
               <TouchableOpacity
@@ -145,7 +195,7 @@ export default function OrdersScreen() {
                     alignItems="center"
                     marginBottom="xs"
                   >
-                    <Text variant="heading">
+                    <Text variant="body">
                       {order.customers?.name || order.name || "Order"}
                     </Text>
                     {order.type && (
@@ -159,17 +209,14 @@ export default function OrdersScreen() {
                             : "input300"
                         }
                       >
-                        <Text variant="label" fontSize={10} color="neutral50">
+                        <Text variant="label" fontSize={10} color="primary700">
                           {order.type.toUpperCase()}
                         </Text>
                       </Box>
                     )}
                   </Box>
-                  <Text variant="body" color="neutral600" fontSize={14}>
+                  <Text variant="body" color="primary900" fontSize={14}>
                     Status: {order.status || "pending"}
-                  </Text>
-                  <Text variant="body" color="neutral600" fontSize={14}>
-                    Items: {order.order_details.length}
                   </Text>
                   {(order.due_date || order.timeline) && (
                     <Text
@@ -200,32 +247,37 @@ export default function OrdersScreen() {
           )}
         </ScrollView>
       </Box>
-
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={() => router.push("/storefront/create")}
-      >
-        <Box
-          backgroundColor="primary900"
-          width={56}
-          height={56}
-          borderRadius="xl"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Text variant="heading" color="neutral50" fontSize={24}>
-            +
-          </Text>
-        </Box>
-      </TouchableOpacity>
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  fab: {
+  tab: {
+    flex: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: theme.spacing.m,
+    backgroundColor: `${theme.colors.primary100}95`,
+    borderRadius: theme.borderRadii.l,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  icon: {
+    width: 24,
+    height: 24,
+  },
+  blurContainer: {
     position: "absolute",
-    right: 16,
-    bottom: 16,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: theme.borderRadii.l,
   },
 });

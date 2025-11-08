@@ -1,6 +1,7 @@
 import { Box, Text } from "@/components";
 import { ConversationCard } from "@/components/dashboard/ConversationCard";
 import { TaskCard } from "@/components/dashboard/TaskCard";
+import { useScroll } from "@/contexts/ScrollContext";
 import { useCompleteTask } from "@/hooks/useCompleteTask";
 import { useRegenerateSchedule } from "@/hooks/useRegenerateSchedule";
 import { useTodaysTasks } from "@/hooks/useTodaysTasks";
@@ -11,6 +12,8 @@ import { memo, useCallback } from "react";
 import {
   ActivityIndicator,
   Alert,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   ScrollView,
   TouchableOpacity,
 } from "react-native";
@@ -22,6 +25,14 @@ export default function Dashboard() {
   const conversationsResponse = useUnreadConversations();
   const completeTaskMutation = useCompleteTask();
   const regenerateScheduleMutation = useRegenerateSchedule();
+  const { setScrollY } = useScroll();
+
+  const handleScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      setScrollY(event.nativeEvent.contentOffset.y);
+    },
+    [setScrollY]
+  );
 
   const onOrderPress = useCallback(
     (orderId: string) => {
@@ -108,7 +119,11 @@ export default function Dashboard() {
         backgroundColor: theme.colors.primary50,
       }}
     >
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
         <Text variant="title" paddingTop="xxl">
           Dashboard
         </Text>

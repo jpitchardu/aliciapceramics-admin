@@ -1,5 +1,6 @@
+import { TabBar } from "@/ui/TabBar";
+
 import { Tabs } from "expo-router";
-import { TabBar } from "@/components/TabBar";
 
 export default function TabLayout() {
   return (
@@ -8,6 +9,7 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
       }}
+      detachInactiveScreens={true}
     >
       <Tabs.Screen
         name="dashboard"

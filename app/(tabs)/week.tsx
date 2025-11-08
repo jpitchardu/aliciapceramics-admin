@@ -1,16 +1,32 @@
+import { Task } from "@/api/data/tasks";
 import { Box, Text } from "@/components";
 import { TaskCard } from "@/components/dashboard/TaskCard";
-import { useWeekTasks } from "@/hooks/useWeekTasks";
+import { useScroll } from "@/contexts/ScrollContext";
 import { useCompleteTask } from "@/hooks/useCompleteTask";
+import { useWeekTasks } from "@/hooks/useWeekTasks";
+import { ScreenContainer } from "@/ui/ScreenContainer";
 import { useRouter } from "expo-router";
 import { memo, useCallback, useMemo } from "react";
-import { ScrollView, ActivityIndicator, Alert } from "react-native";
-import { Task } from "@/api/data/tasks";
+import {
+  ActivityIndicator,
+  Alert,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+} from "react-native";
 
 export default function WeekView() {
   const router = useRouter();
   const tasksResponse = useWeekTasks();
   const completeTaskMutation = useCompleteTask();
+  const { setScrollY } = useScroll();
+
+  const handleScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      setScrollY(event.nativeEvent.contentOffset.y);
+    },
+    [setScrollY]
+  );
 
   const onOrderPress = useCallback(
     (orderId: string) => {
@@ -80,32 +96,42 @@ export default function WeekView() {
 
   if (tasksByDay.length === 0) {
     return (
-      <Box flex={1} backgroundColor="primary50">
+      <ScreenContainer>
+        <Text variant="title" paddingTop="xxl">
+          This week
+        </Text>
         <Box
           flex={1}
           justifyContent="center"
           alignItems="center"
           paddingHorizontal="l"
         >
-          <Text variant="heading" color="neutral600" textAlign="center">
+          <Text variant="heading" color="primary900" textAlign="center">
             No tasks this week
           </Text>
           <Text
             variant="body"
-            color="neutral600"
+            color="primary900"
             textAlign="center"
             marginTop="s"
           >
             The schedule has not been generated yet
           </Text>
         </Box>
-      </Box>
+      </ScreenContainer>
     );
   }
 
   return (
-    <Box flex={1} backgroundColor="primary50">
-      <ScrollView style={{ flex: 1 }}>
+    <ScreenContainer>
+      <Text variant="title" paddingTop="xxl">
+        This week
+      </Text>
+      <ScrollView
+        style={{ flex: 1 }}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
         <Box padding="m" gap="l">
           {tasksByDay.map(({ date, tasks, totalHours }) => (
             <DaySection
@@ -119,7 +145,7 @@ export default function WeekView() {
           ))}
         </Box>
       </ScrollView>
-    </Box>
+    </ScreenContainer>
   );
 }
 

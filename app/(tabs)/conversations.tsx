@@ -1,18 +1,36 @@
 import { Box, Text } from "@/components";
+import { useScroll } from "@/contexts/ScrollContext";
 import { useAllConversations } from "@/hooks/useAllConversations";
+import { ScreenContainer } from "@/ui/ScreenContainer";
 import { useRouter } from "expo-router";
 import { useCallback } from "react";
-import { ScrollView, ActivityIndicator, TouchableOpacity } from "react-native";
+import {
+  ActivityIndicator,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 
 export default function ConversationsScreen() {
   const router = useRouter();
   const { data: conversations, isLoading, isError } = useAllConversations();
 
+  const { setScrollY } = useScroll();
+
+  const onScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      setScrollY(event.nativeEvent.contentOffset.y);
+    },
+    [setScrollY]
+  );
+
   const onConversationPress = useCallback(
     (customerId: string) => {
       router.push(`/customers/${customerId}/conversation`);
     },
-    [router],
+    [router]
   );
 
   if (isError) {
@@ -48,9 +66,12 @@ export default function ConversationsScreen() {
   }
 
   return (
-    <Box flex={1} backgroundColor="primary50">
-      <ScrollView style={{ flex: 1 }}>
-        <Box padding="m" gap="s">
+    <ScreenContainer>
+      <Text variant="title" paddingTop="xxl">
+        Chats
+      </Text>
+      <ScrollView onScroll={onScroll} style={styles.container}>
+        <Box padding="xs" gap="s">
           {conversations && conversations.length > 0 ? (
             conversations.map((conversation) => (
               <TouchableOpacity
@@ -87,6 +108,12 @@ export default function ConversationsScreen() {
           )}
         </Box>
       </ScrollView>
-    </Box>
+    </ScreenContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

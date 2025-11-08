@@ -38,7 +38,7 @@ export async function fetchOrders() {
         quantity,
         type
       )
-    `,
+    `
     )
     .order("created_at", { ascending: false });
 
@@ -57,7 +57,7 @@ export async function fetchOrderById(orderId: string) {
       *,
       customers (*),
       order_details (*)
-    `,
+    `
     )
     .eq("id", orderId)
     .single();
@@ -82,12 +82,30 @@ export async function cancelOrder(orderId: string) {
   return data as OrderWithDetails;
 }
 
-export async function updateOrderDueDate(orderId: string, dueDate: Date | null) {
+export async function completeOrder(orderId: string) {
   const client = getAliciapCeramicsSubaseClient();
 
-  const dueDateString = dueDate ? dueDate.toISOString().split('T')[0] : null;
+  const { data, error } = await client
+    .from("orders")
+    .update({ status: "completed" })
+    .eq("id", orderId)
+    .select()
+    .single();
 
-  const { data, error} = await client
+  if (error) throw error;
+
+  return data as OrderWithDetails;
+}
+
+export async function updateOrderDueDate(
+  orderId: string,
+  dueDate: Date | null
+) {
+  const client = getAliciapCeramicsSubaseClient();
+
+  const dueDateString = dueDate ? dueDate.toISOString().split("T")[0] : null;
+
+  const { data, error } = await client
     .from("orders")
     .update({ due_date: dueDateString })
     .eq("id", orderId)
@@ -102,15 +120,17 @@ export async function updateOrderDueDate(orderId: string, dueDate: Date | null) 
 export type CreateStorefrontOrderParams = {
   name: string;
   dueDate?: Date;
-  pieceDetails: Array<{
+  pieceDetails: {
     type: string;
     size?: string;
     quantity: number;
     description: string;
-  }>;
+  }[];
 };
 
-export async function createStorefrontOrder(params: CreateStorefrontOrderParams) {
+export async function createStorefrontOrder(
+  params: CreateStorefrontOrderParams
+) {
   const client = getAliciapCeramicsSubaseClient();
 
   const { data: order, error: orderError } = await client
@@ -118,9 +138,9 @@ export async function createStorefrontOrder(params: CreateStorefrontOrderParams)
     .insert({
       type: "storefront",
       name: params.name,
-      due_date: params.dueDate?.toISOString().split('T')[0] || null,
+      due_date: params.dueDate?.toISOString().split("T")[0] || null,
       customer_id: null,
-      timeline: params.dueDate?.toISOString().split('T')[0] || "2026-12-31",
+      timeline: params.dueDate?.toISOString().split("T")[0] || "2026-12-31",
       inspiration: "",
       special_considerations: "",
       consent: true,
@@ -130,7 +150,7 @@ export async function createStorefrontOrder(params: CreateStorefrontOrderParams)
 
   if (orderError) throw orderError;
 
-  const orderDetails = params.pieceDetails.map(piece => ({
+  const orderDetails = params.pieceDetails.map((piece) => ({
     order_id: order.id,
     type: piece.type,
     size: piece.size || null,
@@ -153,7 +173,9 @@ export type UpdateOrderDetailProgressParams = {
   completedQuantity?: number;
 };
 
-export async function updateOrderDetailProgress(params: UpdateOrderDetailProgressParams) {
+export async function updateOrderDetailProgress(
+  params: UpdateOrderDetailProgressParams
+) {
   const client = getAliciapCeramicsSubaseClient();
 
   const updates: {
