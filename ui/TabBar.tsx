@@ -198,13 +198,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: `${theme.colors.primary100}95`,
     borderRadius: theme.borderRadii.l,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
   },
   tab: {
     flex: 1,

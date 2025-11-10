@@ -259,13 +259,6 @@ const styles = StyleSheet.create({
     padding: theme.spacing.m,
     backgroundColor: `${theme.colors.primary100}95`,
     borderRadius: theme.borderRadii.l,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
     elevation: 8,
   },
   icon: {
