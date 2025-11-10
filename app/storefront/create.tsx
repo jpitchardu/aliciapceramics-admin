@@ -1,6 +1,6 @@
 import { Box, Text, TextInput } from "@/components";
 import { DatePickerModal } from "@/components/DatePickerModal";
-import { PieceTypeCard } from "@/components/orders/PieceTypeCard";
+import { PieceTypeRow } from "@/components/orders/PieceTypeRow";
 import { PIECE_CONFIGS, PieceDetail } from "@/constants/pieces";
 import { useCreateStorefrontOrder } from "@/hooks/useCreateStorefrontOrder";
 import { theme } from "@/theme";
@@ -58,8 +58,6 @@ export default function CreateStorefrontOrderScreen() {
       }
     );
   };
-
-  const isValid = name.trim() && pieces.length > 0;
 
   return (
     <Box flex={1} backgroundColor="primary50">
@@ -159,20 +157,26 @@ export default function CreateStorefrontOrderScreen() {
 
         <Box gap="s">
           <Text variant="label">Add Pieces *</Text>
-          <Box
-            gap="s"
-            flexDirection="row"
-            flexWrap="wrap"
-            justifyContent="flex-start"
-          >
-            {Object.values(PIECE_CONFIGS).map((config) => (
-              <Box
-                key={config.type}
-                style={{ flexBasis: "31%", maxWidth: "31%" }}
-              >
-                <PieceTypeCard config={config} onAddToOrder={handleAddPiece} />
-              </Box>
-            ))}
+          <Box gap="s">
+            {Object.values(PIECE_CONFIGS)
+              .reduce<(typeof PIECE_CONFIGS)[keyof typeof PIECE_CONFIGS][][]>(
+                (rows, config, index) => {
+                  const rowIndex = Math.floor(index / 3);
+                  if (!rows[rowIndex]) {
+                    rows[rowIndex] = [];
+                  }
+                  rows[rowIndex].push(config);
+                  return rows;
+                },
+                []
+              )
+              .map((rowConfigs, index) => (
+                <PieceTypeRow
+                  key={index}
+                  configs={rowConfigs}
+                  onAddToOrder={handleAddPiece}
+                />
+              ))}
           </Box>
         </Box>
       </ScrollView>
