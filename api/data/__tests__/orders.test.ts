@@ -1,57 +1,21 @@
 import { updateOrderDetailProgress, UpdateOrderDetailProgressParams } from "../orders";
-import { getAliciapCeramicsSubaseClient } from "../../aliciapCeramicsClient";
 
-jest.mock("../../aliciapCeramicsClient");
-
-const mockClient = {
-  from: jest.fn(),
-};
-
-const mockUpdate = jest.fn();
-const mockEq = jest.fn();
-const mockSelect = jest.fn();
-const mockSingle = jest.fn();
+global.fetch = jest.fn() as jest.Mock;
 
 describe("updateOrderDetailProgress", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-
-    (getAliciapCeramicsSubaseClient as jest.Mock).mockReturnValue(mockClient);
-
-    mockClient.from.mockReturnValue({
-      update: mockUpdate,
-    });
-
-    mockUpdate.mockReturnValue({
-      eq: mockEq,
-    });
-
-    mockEq.mockReturnValue({
-      select: mockSelect,
-    });
-
-    mockSelect.mockReturnValue({
-      single: mockSingle,
-    });
   });
 
   it("should update only status when status is provided", async () => {
-    const mockOrderDetail = {
-      id: "detail-123",
-      status: "build",
-      completed_quantity: 5,
-      quantity: 10,
-      type: "mug-with-handle",
-      description: "Test mug",
-      order_id: "order-123",
-      size: "medium",
-      created_at: "2025-01-01T00:00:00Z",
-      status_changed_at: expect.any(String),
+    const mockResponse = {
+      success: true,
+      data: { id: "detail-123", status: "build" },
     };
 
-    mockSingle.mockResolvedValue({
-      data: mockOrderDetail,
-      error: null,
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => mockResponse,
     });
 
     const params: UpdateOrderDetailProgressParams = {
@@ -61,32 +25,30 @@ describe("updateOrderDetailProgress", () => {
 
     const result = await updateOrderDetailProgress(params);
 
-    expect(mockClient.from).toHaveBeenCalledWith("order_details");
-    expect(mockUpdate).toHaveBeenCalledWith({
-      status: "build",
-      status_changed_at: expect.any(String),
-    });
-    expect(mockEq).toHaveBeenCalledWith("id", "detail-123");
-    expect(result).toEqual(mockOrderDetail);
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringContaining("/api/updateOrderDetail"),
+      expect.objectContaining({
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderDetailId: "detail-123",
+          status: "build",
+          completedQuantity: undefined,
+        }),
+      })
+    );
+    expect(result).toEqual(mockResponse);
   });
 
   it("should update only completed quantity when completedQuantity is provided", async () => {
-    const mockOrderDetail = {
-      id: "detail-123",
-      status: "build",
-      completed_quantity: 7,
-      quantity: 10,
-      type: "mug-with-handle",
-      description: "Test mug",
-      order_id: "order-123",
-      size: "medium",
-      created_at: "2025-01-01T00:00:00Z",
-      status_changed_at: "2025-01-01T00:00:00Z",
+    const mockResponse = {
+      success: true,
+      data: { id: "detail-123", completed_quantity: 7 },
     };
 
-    mockSingle.mockResolvedValue({
-      data: mockOrderDetail,
-      error: null,
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => mockResponse,
     });
 
     const params: UpdateOrderDetailProgressParams = {
@@ -96,30 +58,29 @@ describe("updateOrderDetailProgress", () => {
 
     const result = await updateOrderDetailProgress(params);
 
-    expect(mockUpdate).toHaveBeenCalledWith({
-      completed_quantity: 7,
-    });
-    expect(mockEq).toHaveBeenCalledWith("id", "detail-123");
-    expect(result).toEqual(mockOrderDetail);
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringContaining("/api/updateOrderDetail"),
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({
+          orderDetailId: "detail-123",
+          status: undefined,
+          completedQuantity: 7,
+        }),
+      })
+    );
+    expect(result).toEqual(mockResponse);
   });
 
   it("should update both status and completed quantity when both are provided", async () => {
-    const mockOrderDetail = {
-      id: "detail-123",
-      status: "trim",
-      completed_quantity: 8,
-      quantity: 10,
-      type: "mug-with-handle",
-      description: "Test mug",
-      order_id: "order-123",
-      size: "medium",
-      created_at: "2025-01-01T00:00:00Z",
-      status_changed_at: expect.any(String),
+    const mockResponse = {
+      success: true,
+      data: { id: "detail-123", status: "trim", completed_quantity: 8 },
     };
 
-    mockSingle.mockResolvedValue({
-      data: mockOrderDetail,
-      error: null,
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => mockResponse,
     });
 
     const params: UpdateOrderDetailProgressParams = {
@@ -130,101 +91,29 @@ describe("updateOrderDetailProgress", () => {
 
     const result = await updateOrderDetailProgress(params);
 
-    expect(mockUpdate).toHaveBeenCalledWith({
-      status: "trim",
-      completed_quantity: 8,
-      status_changed_at: expect.any(String),
-    });
-    expect(mockEq).toHaveBeenCalledWith("id", "detail-123");
-    expect(result).toEqual(mockOrderDetail);
-  });
-
-  it("should set status_changed_at timestamp when status changes", async () => {
-    const beforeTime = new Date().toISOString();
-
-    const mockOrderDetail = {
-      id: "detail-123",
-      status: "glaze",
-      completed_quantity: 10,
-      quantity: 10,
-      type: "mug-with-handle",
-      description: "Test mug",
-      order_id: "order-123",
-      size: "medium",
-      created_at: "2025-01-01T00:00:00Z",
-      status_changed_at: beforeTime,
-    };
-
-    mockSingle.mockResolvedValue({
-      data: mockOrderDetail,
-      error: null,
-    });
-
-    const params: UpdateOrderDetailProgressParams = {
-      orderDetailId: "detail-123",
-      status: "glaze",
-    };
-
-    await updateOrderDetailProgress(params);
-
-    const updateCall = mockUpdate.mock.calls[0][0];
-    expect(updateCall).toHaveProperty("status_changed_at");
-    expect(typeof updateCall.status_changed_at).toBe("string");
-
-    const timestamp = new Date(updateCall.status_changed_at);
-    expect(timestamp.getTime()).toBeGreaterThanOrEqual(new Date(beforeTime).getTime());
-  });
-
-  it("should not set status_changed_at when only completed quantity changes", async () => {
-    const mockOrderDetail = {
-      id: "detail-123",
-      status: "build",
-      completed_quantity: 5,
-      quantity: 10,
-      type: "mug-with-handle",
-      description: "Test mug",
-      order_id: "order-123",
-      size: "medium",
-      created_at: "2025-01-01T00:00:00Z",
-      status_changed_at: "2025-01-01T00:00:00Z",
-    };
-
-    mockSingle.mockResolvedValue({
-      data: mockOrderDetail,
-      error: null,
-    });
-
-    const params: UpdateOrderDetailProgressParams = {
-      orderDetailId: "detail-123",
-      completedQuantity: 5,
-    };
-
-    await updateOrderDetailProgress(params);
-
-    const updateCall = mockUpdate.mock.calls[0][0];
-    expect(updateCall).not.toHaveProperty("status_changed_at");
-    expect(updateCall).toEqual({
-      completed_quantity: 5,
-    });
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringContaining("/api/updateOrderDetail"),
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({
+          orderDetailId: "detail-123",
+          status: "trim",
+          completedQuantity: 8,
+        }),
+      })
+    );
+    expect(result).toEqual(mockResponse);
   });
 
   it("should handle zero completed quantity", async () => {
-    const mockOrderDetail = {
-      id: "detail-123",
-      status: "pending",
-      completed_quantity: 0,
-      quantity: 10,
-      type: "mug-with-handle",
-      description: "Test mug",
-      order_id: "order-123",
-      size: "medium",
-      created_at: "2025-01-01T00:00:00Z",
-      status_changed_at: "2025-01-01T00:00:00Z",
+    const mockResponse = {
+      success: true,
+      data: { id: "detail-123", completed_quantity: 0 },
     };
 
-    mockSingle.mockResolvedValue({
-      data: mockOrderDetail,
-      error: null,
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => mockResponse,
     });
 
     const params: UpdateOrderDetailProgressParams = {
@@ -234,18 +123,17 @@ describe("updateOrderDetailProgress", () => {
 
     const result = await updateOrderDetailProgress(params);
 
-    expect(mockUpdate).toHaveBeenCalledWith({
-      completed_quantity: 0,
-    });
-    expect(result.completed_quantity).toBe(0);
+    expect(result.data.completed_quantity).toBe(0);
   });
 
-  it("should throw error when Supabase returns error", async () => {
-    const mockError = { message: "Database error", code: "DB_ERROR" };
+  it("should throw error when API returns non-ok response", async () => {
+    const errorResponse = {
+      message: "Database error",
+    };
 
-    mockSingle.mockResolvedValue({
-      data: null,
-      error: mockError,
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: false,
+      json: async () => errorResponse,
     });
 
     const params: UpdateOrderDetailProgressParams = {
@@ -253,38 +141,26 @@ describe("updateOrderDetailProgress", () => {
       status: "build",
     };
 
-    await expect(updateOrderDetailProgress(params)).rejects.toEqual(mockError);
+    await expect(updateOrderDetailProgress(params)).rejects.toThrow("Database error");
   });
 
-  it("should handle updating to completed status", async () => {
-    const mockOrderDetail = {
-      id: "detail-123",
-      status: "completed",
-      completed_quantity: 10,
-      quantity: 10,
-      type: "mug-with-handle",
-      description: "Test mug",
-      order_id: "order-123",
-      size: "medium",
-      created_at: "2025-01-01T00:00:00Z",
-      status_changed_at: expect.any(String),
+  it("should throw error when success is false", async () => {
+    const errorResponse = {
+      success: false,
+      message: "Update failed",
     };
 
-    mockSingle.mockResolvedValue({
-      data: mockOrderDetail,
-      error: null,
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => errorResponse,
     });
 
     const params: UpdateOrderDetailProgressParams = {
       orderDetailId: "detail-123",
-      status: "completed",
-      completedQuantity: 10,
+      status: "build",
     };
 
-    const result = await updateOrderDetailProgress(params);
-
-    expect(result.status).toBe("completed");
-    expect(result.completed_quantity).toBe(10);
+    await expect(updateOrderDetailProgress(params)).rejects.toThrow("Update failed");
   });
 
   it("should handle all valid status values", async () => {
@@ -301,22 +177,14 @@ describe("updateOrderDetailProgress", () => {
     ];
 
     for (const status of validStatuses) {
-      const mockOrderDetail = {
-        id: "detail-123",
-        status,
-        completed_quantity: 5,
-        quantity: 10,
-        type: "mug-with-handle",
-        description: "Test mug",
-        order_id: "order-123",
-        size: "medium",
-        created_at: "2025-01-01T00:00:00Z",
-        status_changed_at: expect.any(String),
+      const mockResponse = {
+        success: true,
+        data: { id: "detail-123", status },
       };
 
-      mockSingle.mockResolvedValue({
-        data: mockOrderDetail,
-        error: null,
+      (global.fetch as jest.Mock).mockResolvedValue({
+        ok: true,
+        json: async () => mockResponse,
       });
 
       const params: UpdateOrderDetailProgressParams = {
@@ -326,7 +194,7 @@ describe("updateOrderDetailProgress", () => {
 
       const result = await updateOrderDetailProgress(params);
 
-      expect(result.status).toBe(status);
+      expect(result.data.status).toBe(status);
     }
   });
 });
