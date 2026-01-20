@@ -1,20 +1,15 @@
 import { Box, Text } from "@/components";
-import { ConversationCard } from "@/components/dashboard/ConversationCard";
 import { TaskCard } from "@/components/dashboard/TaskCard";
-import { useScroll } from "@/contexts/ScrollContext";
+import { useTodaysTasks } from "@/hooks/useTodaysTasks";
 import { useCompleteTask } from "@/hooks/useCompleteTask";
 import { useRegenerateSchedule } from "@/hooks/useRegenerateSchedule";
-import { useTodaysTasks } from "@/hooks/useTodaysTasks";
-import { useUnreadConversations } from "@/hooks/useUnreadConversations";
 import { theme } from "@/theme";
 import { useRouter } from "expo-router";
 import { memo, useCallback } from "react";
 import {
+  ScrollView,
   ActivityIndicator,
   Alert,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  ScrollView,
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -22,28 +17,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Dashboard() {
   const router = useRouter();
   const tasksResponse = useTodaysTasks();
-  const conversationsResponse = useUnreadConversations();
   const completeTaskMutation = useCompleteTask();
   const regenerateScheduleMutation = useRegenerateSchedule();
-  const { setScrollY } = useScroll();
-
-  const handleScroll = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      setScrollY(event.nativeEvent.contentOffset.y);
-    },
-    [setScrollY]
-  );
 
   const onOrderPress = useCallback(
     (orderId: string) => {
       router.push(`/orders/${orderId}`);
-    },
-    [router]
-  );
-
-  const onConversationPress = useCallback(
-    (customerId: string) => {
-      router.push(`/customers/${customerId}/conversation`);
     },
     [router]
   );
@@ -96,9 +75,8 @@ export default function Dashboard() {
     );
   }, [regenerateScheduleMutation]);
 
-  const isLoading =
-    !tasksResponse.isSuccess || !conversationsResponse.isSuccess;
-  const hasError = tasksResponse.isError || conversationsResponse.isError;
+  const isLoading = !tasksResponse.isSuccess;
+  const hasError = tasksResponse.isError;
 
   if (hasError) {
     return <ErrorState error={JSON.stringify(tasksResponse.error)} />;
@@ -109,7 +87,6 @@ export default function Dashboard() {
   }
 
   const { data: tasks } = tasksResponse;
-  const { data: conversations } = conversationsResponse;
 
   return (
     <SafeAreaView
@@ -119,32 +96,11 @@ export default function Dashboard() {
         backgroundColor: theme.colors.primary50,
       }}
     >
-      <ScrollView
-        style={{ flex: 1 }}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-      >
+      <ScrollView style={{ flex: 1 }}>
         <Text variant="title" paddingTop="xxl">
           Dashboard
         </Text>
         <Box padding="m" gap="l">
-          {conversations && conversations.length > 0 && (
-            <Box gap="s">
-              <Text variant="heading">
-                Unread Messages ({conversations.length})
-              </Text>
-              <Box gap="s">
-                {conversations.map((conversation) => (
-                  <ConversationCard
-                    key={conversation.conversation_id}
-                    conversation={conversation}
-                    onPress={onConversationPress}
-                  />
-                ))}
-              </Box>
-            </Box>
-          )}
-
           {tasks && tasks.length > 0 && (
             <Box gap="s">
               <Box
@@ -187,18 +143,17 @@ export default function Dashboard() {
             </Box>
           )}
 
-          {(!tasks || tasks.length === 0) &&
-            (!conversations || conversations.length === 0) && (
-              <Box
-                justifyContent="center"
-                alignItems="center"
-                paddingVertical="xl"
-              >
-                <Text variant="heading" color="primary900" textAlign="center">
-                  All caught up! 🎉
-                </Text>
-              </Box>
-            )}
+          {(!tasks || tasks.length === 0) && (
+            <Box
+              justifyContent="center"
+              alignItems="center"
+              paddingVertical="xl"
+            >
+              <Text variant="heading" color="primary900" textAlign="center">
+                All caught up! 🎉
+              </Text>
+            </Box>
+          )}
 
           <Box gap="s" marginTop="l">
             <Text variant="heading">Quick Actions</Text>

@@ -173,34 +173,31 @@ export type UpdateOrderDetailProgressParams = {
   completedQuantity?: number;
 };
 
-export async function updateOrderDetailProgress(
-  params: UpdateOrderDetailProgressParams
-) {
-  const client = getAliciapCeramicsSubaseClient();
+export async function updateOrderDetailProgress(params: UpdateOrderDetailProgressParams) {
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL || "https://aliciapceramics.com";
 
-  const updates: {
-    status?: string;
-    completed_quantity?: number;
-    status_changed_at?: string;
-  } = {};
+  const response = await fetch(`${apiUrl}/api/updateOrderDetail`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      orderDetailId: params.orderDetailId,
+      status: params.status,
+      completedQuantity: params.completedQuantity,
+    }),
+  });
 
-  if (params.status !== undefined) {
-    updates.status = params.status;
-    updates.status_changed_at = new Date().toISOString();
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to update order detail");
   }
 
-  if (params.completedQuantity !== undefined) {
-    updates.completed_quantity = params.completedQuantity;
+  const result = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Failed to update order detail");
   }
 
-  const { data, error } = await client
-    .from("order_details")
-    .update(updates)
-    .eq("id", params.orderDetailId)
-    .select()
-    .single();
-
-  if (error) throw error;
-
-  return data as Tables<"order_details">;
+  return result;
 }
