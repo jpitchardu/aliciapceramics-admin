@@ -34,6 +34,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      availability: {
+        Row: {
+          available_hours: number
+          created_at: string
+          date: string
+          id: string
+          notes: string | null
+          updated_at: string
+        }
+        Insert: {
+          available_hours: number
+          created_at?: string
+          date: string
+          id?: string
+          notes?: string | null
+          updated_at?: string
+        }
+        Update: {
+          available_hours?: number
+          created_at?: string
+          date?: string
+          id?: string
+          notes?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      bulk_commission_codes: {
+        Row: {
+          code: string
+          created_at: string | null
+          earliest_completion_date: string
+          id: string
+          name: string
+          redeemed_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          earliest_completion_date: string
+          id?: string
+          name: string
+          redeemed_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          earliest_completion_date?: string
+          id?: string
+          name?: string
+          redeemed_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       conversations: {
         Row: {
           created_at: string | null
@@ -153,7 +210,7 @@ export type Database = {
         Row: {
           body: string
           conversation_id: string
-          created_at: string | null
+          created_at: string
           direction: string
           id: string
           read_at: string | null
@@ -163,7 +220,7 @@ export type Database = {
         Insert: {
           body: string
           conversation_id: string
-          created_at?: string | null
+          created_at?: string
           direction: string
           id?: string
           read_at?: string | null
@@ -173,7 +230,7 @@ export type Database = {
         Update: {
           body?: string
           conversation_id?: string
-          created_at?: string | null
+          created_at?: string
           direction?: string
           id?: string
           read_at?: string | null
@@ -279,6 +336,7 @@ export type Database = {
       orders: {
         Row: {
           access_token: string
+          bulk_commission_code_id: string | null
           consent: boolean
           created_at: string | null
           customer_id: string | null
@@ -297,6 +355,7 @@ export type Database = {
         }
         Insert: {
           access_token?: string
+          bulk_commission_code_id?: string | null
           consent: boolean
           created_at?: string | null
           customer_id?: string | null
@@ -315,6 +374,7 @@ export type Database = {
         }
         Update: {
           access_token?: string
+          bulk_commission_code_id?: string | null
           consent?: boolean
           created_at?: string | null
           customer_id?: string | null
@@ -332,6 +392,13 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "orders_bulk_commission_code_id_fkey"
+            columns: ["bulk_commission_code_id"]
+            isOneToOne: false
+            referencedRelation: "bulk_commission_codes"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "orders_customer_id_fkey"
             columns: ["customer_id"]
@@ -445,7 +512,7 @@ export type Database = {
       }
     }
     Functions: {
-      complete_task: { Args: { task_id_param: string }; Returns: Json }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never

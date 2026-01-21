@@ -20,6 +20,10 @@ export default function TabLayout() {
         <Label hidden />
         <Icon sf={"calendar"} />
       </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="bulk-codes">
+        <Label hidden />
+        <Icon sf={"ticket"} />
+      </NativeTabs.Trigger>
     </NativeTabs>
   );
 }
