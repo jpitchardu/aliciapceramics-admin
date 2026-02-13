@@ -1,4 +1,5 @@
 import { Box, Text } from "@/components";
+import { OrderCard } from "@/components/orders/OrderCard";
 import { useOrders } from "@/hooks/useOrders";
 
 import { useScroll } from "@/contexts/ScrollContext";
@@ -17,7 +18,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-type FilterType = "all" | "commissioned" | "storefront" | "cancelled";
+type FilterType =
+  | "all"
+  | "commissioned"
+  | "storefront"
+  | "bulk"
+  | "completed"
+  | "cancelled";
 
 export default function OrdersScreen() {
   const router = useRouter();
@@ -51,7 +58,7 @@ export default function OrdersScreen() {
           </TouchableOpacity>
         );
       },
-    [router]
+    [router],
   );
 
   useEffect(() => {
@@ -64,20 +71,31 @@ export default function OrdersScreen() {
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       setScrollY(event.nativeEvent.contentOffset.y);
     },
-    [setScrollY]
+    [setScrollY],
   );
 
   const filteredAndSortedOrders = useMemo(() => {
     if (!orders) return [];
 
+    const activeStatuses = ["cancelled", "completed"];
+
     let filtered = orders.filter((order) => {
       if (activeFilter === "all") {
-        return order.status !== "cancelled";
+        return !activeStatuses.includes(order.status ?? "");
       }
       if (activeFilter === "cancelled") {
         return order.status === "cancelled";
       }
-      return order.type === activeFilter && order.status !== "cancelled";
+      if (activeFilter === "completed") {
+        return order.status === "completed";
+      }
+      if (activeFilter === "bulk") {
+        return !!order.bulk_commission_code_id;
+      }
+      return (
+        order.type === activeFilter &&
+        !activeStatuses.includes(order.status ?? "")
+      );
     });
 
     return filtered.sort((a, b) => {
@@ -164,6 +182,8 @@ export default function OrdersScreen() {
             <FilterPill filter="all" label="All" />
             <FilterPill filter="commissioned" label="Commissions" />
             <FilterPill filter="storefront" label="Storefront" />
+            <FilterPill filter="bulk" label="Bulk" />
+            <FilterPill filter="completed" label="Completed" />
             <FilterPill filter="cancelled" label="Cancelled" />
           </Box>
         </ScrollView>
@@ -178,65 +198,11 @@ export default function OrdersScreen() {
         >
           {filteredAndSortedOrders && filteredAndSortedOrders.length > 0 ? (
             filteredAndSortedOrders.map((order) => (
-              <TouchableOpacity
+              <OrderCard
                 key={order.id}
-                onPress={() => router.push(`/orders/${order.id}`)}
-              >
-                <Box
-                  backgroundColor="neutral50"
-                  padding="m"
-                  borderRadius="m"
-                  borderWidth={1}
-                  borderColor="neutral200"
-                >
-                  <Box
-                    flexDirection="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    marginBottom="xs"
-                  >
-                    <Text variant="body">
-                      {order.customers?.name || order.name || "Order"}
-                    </Text>
-                    {order.type && (
-                      <Box
-                        paddingHorizontal="s"
-                        paddingVertical="xs"
-                        borderRadius="s"
-                        backgroundColor={
-                          order.type === "commissioned"
-                            ? "interactive300"
-                            : "input300"
-                        }
-                      >
-                        <Text variant="label" fontSize={10} color="primary700">
-                          {order.type.toUpperCase()}
-                        </Text>
-                      </Box>
-                    )}
-                  </Box>
-                  <Text variant="body" color="primary900" fontSize={14}>
-                    Status: {order.status || "pending"}
-                  </Text>
-                  {(order.due_date || order.timeline) && (
-                    <Text
-                      variant="body"
-                      color="primary900"
-                      fontSize={14}
-                      marginTop="xs"
-                    >
-                      Due:{" "}
-                      {new Date(
-                        order.due_date || order.timeline!
-                      ).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </Text>
-                  )}
-                </Box>
-              </TouchableOpacity>
+                order={order}
+                onPress={(id) => router.push(`/orders/${id}`)}
+              />
             ))
           ) : (
             <Box paddingVertical="xl" alignItems="center">
@@ -259,6 +225,7 @@ const styles = StyleSheet.create({
     padding: theme.spacing.m,
     backgroundColor: `${theme.colors.primary100}95`,
     borderRadius: theme.borderRadii.l,
+    overflow: "hidden",
     elevation: 8,
   },
   icon: {

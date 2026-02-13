@@ -31,6 +31,7 @@ export const theme = createTheme({
     neutral50: "#ffffff", // white
     neutral200: "#e8ecee", // borders
     neutral600: "#a4b4b7", // disabled text
+    neutral700: "#6b7f82", // placeholder text
   },
 
   spacing: {

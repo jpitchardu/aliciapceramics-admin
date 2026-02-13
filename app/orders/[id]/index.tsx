@@ -208,36 +208,13 @@ export default function OrderDetail() {
 
   return (
     <Box flex={1} backgroundColor="primary50">
-      <Box flexDirection="row" padding="m">
-        <TouchableOpacity
-          accessibilityRole="button"
-          accessibilityLabel="New order"
-          onPress={router.back}
-          style={styles.tab}
-        >
-          <SymbolView
-            name="xmark"
-            size={24}
-            type="hierarchical"
-            tintColor={theme.colors.primary900}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
-        <Box flex={1} />
-        <TouchableOpacity
-          accessibilityRole="button"
-          accessibilityLabel="New order"
-          onPress={openMessagingScreen}
-          style={styles.tab}
-        >
-          <SymbolView
-            name="bubble.fill"
-            size={24}
-            type="hierarchical"
-            tintColor={theme.colors.primary900}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
+      <Box alignItems="center" paddingTop="s" paddingBottom="xs">
+        <Box
+          width={36}
+          height={4}
+          borderRadius="s"
+          backgroundColor="neutral200"
+        />
       </Box>
 
       <Box paddingTop="l" paddingBottom="s" paddingHorizontal="m" gap="s">

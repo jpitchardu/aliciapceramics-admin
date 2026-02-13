@@ -1,26 +1,83 @@
 import { Box, Text, TextInput } from "@/components";
 import { BulkCodeCard } from "@/components/BulkCodeCard";
-import { useBulkCodes, useCreateBulkCode } from "@/hooks/useBulkCodes";
+import { BulkCodeDetailSheet } from "@/components/BulkCodeDetailSheet";
 import { DatePickerModal } from "@/components/DatePickerModal";
+import { useScroll } from "@/contexts/ScrollContext";
+import { useBulkCodes, useCreateBulkCode, BulkCommissionCode } from "@/hooks/useBulkCodes";
+import { BottomSheet } from "@/ui/BottomSheet";
+import { ScreenContainer } from "@/ui/ScreenContainer";
 import { theme } from "@/theme";
-import { useState } from "react";
+import { BlurView } from "expo-blur";
+import { useNavigation } from "expo-router";
+import { SymbolView } from "expo-symbols";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  ScrollView,
   ActivityIndicator,
   Alert,
-  TouchableOpacity,
   KeyboardAvoidingView,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+
+type FilterType = "active" | "redeemed";
 
 export default function BulkCodesScreen() {
+  const navigation = useNavigation();
   const bulkCodesResponse = useBulkCodes();
   const createBulkCodeMutation = useCreateBulkCode();
+  const { setScrollY } = useScroll();
 
+  const [activeFilter, setActiveFilter] = useState<FilterType>("active");
+  const [showSheet, setShowSheet] = useState(false);
+  const [selectedCode, setSelectedCode] = useState<BulkCommissionCode | null>(null);
   const [name, setName] = useState("");
-  const [earliestDate, setEarliestDate] = useState<Date | undefined>(undefined);
+  const [earliestDate, setEarliestDate] = useState<Date | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const ActionButton = useMemo(
+    () =>
+      function ActionButton() {
+        return (
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="New bulk code"
+            onPress={() => setShowSheet(true)}
+            style={styles.tab}
+          >
+            <BlurView
+              intensity={15}
+              style={styles.blurContainer}
+              tint="prominent"
+            />
+            <SymbolView
+              name="plus"
+              size={24}
+              type="hierarchical"
+              tintColor={theme.colors.primary900}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+        );
+      },
+    []
+  );
+
+  useEffect(() => {
+    navigation.setOptions({
+      tabBarActionButton: ActionButton,
+    });
+  }, [navigation, ActionButton]);
+
+  const handleScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      setScrollY(event.nativeEvent.contentOffset.y);
+    },
+    [setScrollY]
+  );
 
   const handleCreateCode = () => {
     if (!name.trim()) {
@@ -41,7 +98,8 @@ export default function BulkCodesScreen() {
         onSuccess: (data) => {
           Alert.alert("Success", `Bulk code created: ${data.code}`);
           setName("");
-          setEarliestDate(undefined);
+          setEarliestDate(null);
+          setShowSheet(false);
         },
         onError: (error) => {
           Alert.alert("Error", `Failed to create bulk code: ${error.message}`);
@@ -50,129 +108,238 @@ export default function BulkCodesScreen() {
     );
   };
 
-  if (bulkCodesResponse.isLoading) {
-    return (
-      <SafeAreaView
-        edges={["top", "left", "right"]}
-        style={{ flex: 1, backgroundColor: theme.colors.primary50 }}
-      >
-        <Box flex={1} justifyContent="center" alignItems="center">
-          <ActivityIndicator size="large" color={theme.colors.primary900} />
-        </Box>
-      </SafeAreaView>
+  const filteredCodes = useMemo(() => {
+    if (!bulkCodesResponse.data) return [];
+    return bulkCodesResponse.data.filter((code) =>
+      activeFilter === "active" ? !code.redeemed_at : !!code.redeemed_at
     );
-  }
+  }, [bulkCodesResponse.data, activeFilter]);
+
+  const FilterPill = ({
+    filter,
+    label,
+  }: {
+    filter: FilterType;
+    label: string;
+  }) => (
+    <TouchableOpacity onPress={() => setActiveFilter(filter)}>
+      <Box
+        paddingHorizontal="m"
+        paddingVertical="s"
+        borderRadius="xl"
+        backgroundColor={activeFilter === filter ? "primary900" : "neutral50"}
+        borderWidth={1}
+        borderColor={activeFilter === filter ? "primary900" : "neutral200"}
+      >
+        <Text
+          variant="label"
+          color={activeFilter === filter ? "neutral50" : "primary700"}
+          fontSize={12}
+        >
+          {label}
+        </Text>
+      </Box>
+    </TouchableOpacity>
+  );
 
   if (bulkCodesResponse.isError) {
     return (
-      <SafeAreaView
-        edges={["top", "left", "right"]}
-        style={{ flex: 1, backgroundColor: theme.colors.primary50 }}
+      <Box
+        flex={1}
+        backgroundColor="primary50"
+        justifyContent="center"
+        alignItems="center"
+        padding="l"
       >
-        <Box flex={1} justifyContent="center" alignItems="center" padding="xl">
-          <Text variant="heading" color="alert600" textAlign="center">
-            ERROR LOADING BULK CODES
-          </Text>
-          <Text variant="body" color="neutral600" textAlign="center" marginTop="m">
-            {bulkCodesResponse.error?.message || "Unknown error"}
-          </Text>
-        </Box>
-      </SafeAreaView>
+        <Text variant="heading" color="alert600" textAlign="center">
+          Error Loading Bulk Codes
+        </Text>
+      </Box>
     );
   }
 
-  const bulkCodes = bulkCodesResponse.data || [];
+  if (bulkCodesResponse.isLoading) {
+    return (
+      <Box
+        flex={1}
+        backgroundColor="primary50"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <ActivityIndicator size="large" color={theme.colors.primary900} />
+        <Text variant="body" marginTop="m">
+          Loading bulk codes...
+        </Text>
+      </Box>
+    );
+  }
 
   return (
-    <SafeAreaView
-      edges={["top", "left", "right"]}
-      style={{ flex: 1, backgroundColor: theme.colors.primary50 }}
-    >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-      >
-        <Box flex={1}>
-          <Box padding="m" gap="m" backgroundColor="primary100">
-            <Text variant="brand" fontSize={32} color="primary900">
-              bulk codes
-            </Text>
-
-            <Box gap="s">
-              <TextInput
-                placeholder="Code name..."
-                value={name}
-                onChangeText={setName}
-              />
-
-              <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-                <Box
-                  backgroundColor="input300"
-                  padding="m"
-                  borderRadius="m"
-                  borderWidth={2}
-                  borderColor="primary50"
-                >
-                  <Text variant="body" color="primary900">
-                    {earliestDate
-                      ? `Earliest: ${earliestDate.toLocaleDateString()}`
-                      : "Select earliest completion date..."}
-                  </Text>
-                </Box>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={handleCreateCode}
-                disabled={createBulkCodeMutation.isPending}
-              >
-                <Box
-                  backgroundColor="interactive500"
-                  padding="m"
-                  borderRadius="m"
-                  opacity={createBulkCodeMutation.isPending ? 0.6 : 1}
-                >
-                  <Text variant="button" color="neutral50" textAlign="center">
-                    {createBulkCodeMutation.isPending
-                      ? "CREATING..."
-                      : "CREATE CODE"}
-                  </Text>
-                </Box>
-              </TouchableOpacity>
+    <>
+      <ScreenContainer>
+        <Text variant="title" paddingTop="xxl">
+          Bulk Codes
+        </Text>
+        <Box paddingHorizontal="xs" paddingTop="m" paddingBottom="m">
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <Box flexDirection="row" gap="s">
+              <FilterPill filter="active" label="Active" />
+              <FilterPill filter="redeemed" label="Redeemed" />
             </Box>
-          </Box>
-
-          <ScrollView
-            style={{ flex: 1 }}
-            contentContainerStyle={{
-              padding: theme.spacing.m,
-              gap: theme.spacing.m,
-            }}
-          >
-            {bulkCodes.length === 0 ? (
-              <Box padding="xl" alignItems="center">
-                <Text variant="body" color="neutral600" textAlign="center">
-                  No bulk codes yet. Create one above.
-                </Text>
-              </Box>
-            ) : (
-              bulkCodes.map((code) => (
-                <BulkCodeCard key={code.id} bulkCode={code} />
-              ))
-            )}
           </ScrollView>
         </Box>
 
+        <Box paddingHorizontal="xs" gap="s" flex={1}>
+          <ScrollView
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+            contentContainerStyle={{ paddingBottom: 90, gap: 8 }}
+            showsVerticalScrollIndicator={false}
+          >
+            {filteredCodes.length > 0 ? (
+              filteredCodes.map((code) => (
+                <BulkCodeCard
+                  key={code.id}
+                  bulkCode={code}
+                  onPress={() => setSelectedCode(code)}
+                />
+              ))
+            ) : (
+              <Box paddingVertical="xl" alignItems="center">
+                <Text variant="heading" color="neutral600" textAlign="center">
+                  No {activeFilter} codes
+                </Text>
+              </Box>
+            )}
+          </ScrollView>
+        </Box>
+      </ScreenContainer>
+
+      <BottomSheet visible={showSheet} onClose={() => setShowSheet(false)}>
+        <BottomSheet.Header>New Bulk Code</BottomSheet.Header>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <BottomSheet.Body>
+            <Box gap="s">
+              <Box gap="xs">
+                <Text variant="label">Code Name *</Text>
+                <TextInput
+                  placeholder="e.g., Spring 2026, Wedding Party"
+                  value={name}
+                  onChangeText={setName}
+                  autoFocus
+                  multiline={false}
+                  returnKeyType="done"
+                  blurOnSubmit
+                />
+              </Box>
+
+              <Box gap="xs">
+                <Text variant="label">Earliest Completion Date *</Text>
+                <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                  <Box
+                    backgroundColor="input400"
+                    padding="m"
+                    borderRadius="l"
+                    borderWidth={2}
+                    borderColor="primary50"
+                  >
+                    <Text
+                      variant="body"
+                      color={earliestDate ? "primary900" : "neutral700"}
+                    >
+                      {earliestDate
+                        ? earliestDate.toLocaleDateString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          })
+                        : "No date set"}
+                    </Text>
+                  </Box>
+                </TouchableOpacity>
+              </Box>
+            </Box>
+          </BottomSheet.Body>
+          <BottomSheet.Footer>
+            <TouchableOpacity
+              onPress={handleCreateCode}
+              disabled={createBulkCodeMutation.isPending}
+            >
+              <Box
+                backgroundColor="primary900"
+                padding="m"
+                borderRadius="l"
+                opacity={createBulkCodeMutation.isPending ? 0.6 : 1}
+                alignItems="center"
+              >
+                <Text variant="button">
+                  {createBulkCodeMutation.isPending ? "CREATING..." : "CREATE CODE"}
+                </Text>
+              </Box>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setShowSheet(false)}>
+              <Box
+                backgroundColor="neutral200"
+                padding="m"
+                borderRadius="l"
+                alignItems="center"
+              >
+                <Text variant="button" color="neutral600">CANCEL</Text>
+              </Box>
+            </TouchableOpacity>
+          </BottomSheet.Footer>
+        </KeyboardAvoidingView>
+
         <DatePickerModal
           visible={showDatePicker}
-          value={earliestDate}
-          onClose={() => setShowDatePicker(false)}
-          onChange={(date) => {
-            setEarliestDate(date || undefined);
+          currentDate={earliestDate}
+          onConfirm={(date) => {
+            setEarliestDate(date);
             setShowDatePicker(false);
           }}
-          minimumDate={new Date()}
+          onCancel={() => setShowDatePicker(false)}
         />
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </BottomSheet>
+
+      <BulkCodeDetailSheet
+        bulkCode={selectedCode}
+        onClose={() => setSelectedCode(null)}
+      />
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  tab: {
+    flex: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: theme.spacing.m,
+    backgroundColor: `${theme.colors.primary100}95`,
+    borderRadius: theme.borderRadii.l,
+    overflow: "hidden",
+    elevation: 8,
+  },
+  icon: {
+    width: 24,
+    height: 24,
+  },
+  blurContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: theme.borderRadii.l,
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "flex-end",
+  },
+  sheetWrapper: {
+    width: "100%",
+  },
+});

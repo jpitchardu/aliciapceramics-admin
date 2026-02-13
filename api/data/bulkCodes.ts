@@ -21,13 +21,12 @@ export type CreateBulkCommissionCodeParams = {
   earliestCompletionDate: Date;
 };
 
-function generateBulkCode(): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let code = "";
-  for (let i = 0; i < 8; i++) {
-    code += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return code;
+function generateBulkCode(name: string, date: Date): string {
+  const yy = String(date.getFullYear()).slice(2);
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+  const safeName = name.replace(/\s+/g, "");
+  return `${safeName}${yy}${mm}${dd}`;
 }
 
 export async function createBulkCommissionCode(
@@ -35,7 +34,7 @@ export async function createBulkCommissionCode(
 ) {
   const client = getAliciapCeramicsSubaseClient();
 
-  const code = generateBulkCode();
+  const code = generateBulkCode(params.name, params.earliestCompletionDate);
   const dateString = params.earliestCompletionDate.toISOString().split("T")[0];
 
   const { data, error } = await client
@@ -51,6 +50,17 @@ export async function createBulkCommissionCode(
   if (error) throw error;
 
   return data as BulkCommissionCode;
+}
+
+export async function deleteBulkCommissionCode(id: string) {
+  const client = getAliciapCeramicsSubaseClient();
+
+  const { error } = await client
+    .from("bulk_commission_codes")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw error;
 }
 
 export async function fetchOrdersByBulkCode(bulkCodeId: string) {

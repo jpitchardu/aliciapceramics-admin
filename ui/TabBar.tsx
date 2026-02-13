@@ -11,7 +11,7 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 
-type TabRoute = "dashboard" | "orders" | "conversations" | "week";
+type TabRoute = "dashboard" | "orders" | "week" | "bulk-codes";
 
 // Custom options interface that extends the base options
 interface CustomTabOptions {
@@ -21,8 +21,8 @@ interface CustomTabOptions {
 const TAB_ICONS: Record<TabRoute, { default: SFSymbol; selected: SFSymbol }> = {
   dashboard: { default: "house", selected: "house.fill" },
   orders: { default: "list.bullet", selected: "list.bullet" },
-  conversations: { default: "bubble.left", selected: "bubble.left.fill" },
   week: { default: "calendar", selected: "calendar" },
+  "bulk-codes": { default: "ticket", selected: "ticket.fill" },
 };
 
 const COLLAPSE_THRESHOLD = Dimensions.get("window").height * 0.5; // 50vh
@@ -174,16 +174,16 @@ const styles = StyleSheet.create({
     position: "absolute",
     display: "flex",
     flexDirection: "row",
-    overflow: "hidden",
     bottom: theme.spacing.l,
     left: 0,
     right: 0,
     paddingHorizontal: theme.spacing.m,
-    borderRadius: theme.borderRadii.l,
     justifyContent: "space-between",
   },
   container: {
     flexShrink: 1,
+    borderRadius: theme.borderRadii.l,
+    overflow: "hidden",
   },
   blurContainer: {
     position: "absolute",
