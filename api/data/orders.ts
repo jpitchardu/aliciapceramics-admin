@@ -8,6 +8,7 @@ export type Order = {
   type: string | null;
   due_date: string | null;
   timeline: string | null;
+  bulk_commission_code_id: string | null;
   customers: { name: string } | null;
   order_details: { id: string; quantity: number; type: string }[];
 };
@@ -30,6 +31,7 @@ export async function fetchOrders() {
       type,
       due_date,
       timeline,
+      bulk_commission_code_id,
       customers (
         name
       ),

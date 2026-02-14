@@ -97,8 +97,17 @@ export default function CreateStorefrontOrderScreen() {
           <Box gap="xs" paddingVertical="xs">
             <Text variant="label">Target Completion Date (Optional)</Text>
             <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-              <Box backgroundColor="input400" padding="m" borderRadius="m">
-                <Text variant="body" textAlign="center">
+              <Box
+                backgroundColor="input400"
+                padding="m"
+                borderRadius="l"
+                borderWidth={2}
+                borderColor="primary50"
+              >
+                <Text
+                  variant="body"
+                  color={dueDate ? "primary900" : "neutral700"}
+                >
                   {dueDate
                     ? dueDate.toLocaleDateString("en-US", {
                         month: "long",

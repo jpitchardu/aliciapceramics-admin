@@ -18,6 +18,7 @@ export const TextInput = forwardRef(
     return (
       <RNTextInput
         ref={ref}
+        placeholderTextColor="#6b7f82"
         style={[
           {
             borderRadius: 14,
