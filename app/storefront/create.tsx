@@ -1,102 +1,52 @@
 import { Box, Text, TextInput } from "@/components";
-import { DatePickerModal } from "@/components/DatePickerModal";
+import { DragHandle } from "@/ui/DragHandle";
 import { PieceTypeRow } from "@/components/orders/PieceTypeRow";
-import { PIECE_CONFIGS, PieceDetail } from "@/constants/pieces";
-import { useCreateStorefrontOrder } from "@/hooks/useCreateStorefrontOrder";
+import { PIECE_CONFIGS } from "@/constants/pieces";
+import { useCreateStorefrontOrderScreen } from "./useCreateStorefrontOrderScreen";
 import { theme } from "@/theme";
-import { CloseButton } from "@/ui/CloseButton";
-import { IconButton } from "@/ui/IconButton";
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Alert, ScrollView, TouchableOpacity } from "react-native";
+import { ScrollView, TouchableOpacity } from "react-native";
 
 export default function CreateStorefrontOrderScreen() {
-  const router = useRouter();
-  const [name, setName] = useState("");
-  const [dueDate, setDueDate] = useState<Date | null>(null);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [pieces, setPieces] = useState<PieceDetail[]>([]);
-
-  const createOrderMutation = useCreateStorefrontOrder();
-
-  const handleAddPiece = (piece: PieceDetail) => {
-    setPieces([...pieces, piece]);
-  };
-
-  const handleRemovePiece = (index: number) => {
-    setPieces(pieces.filter((_, i) => i !== index));
-  };
-
-  const handleCreate = () => {
-    if (!name.trim()) {
-      Alert.alert("Error", "Please enter an order name");
-      return;
-    }
-    if (pieces.length === 0) {
-      Alert.alert("Error", "Please add at least one piece");
-      return;
-    }
-
-    createOrderMutation.mutate(
-      {
-        name: name.trim(),
-        dueDate: dueDate || undefined,
-        pieceDetails: pieces,
-      },
-      {
-        onSuccess: () => {
-          Alert.alert("Success", "Storefront order created!", [
-            {
-              text: "OK",
-              onPress: () => router.back(),
-            },
-          ]);
-        },
-        onError: (error) => {
-          Alert.alert("Error", `Failed to create order: ${error.message}`);
-        },
-      }
-    );
-  };
+  const {
+    name,
+    setName,
+    dueDate,
+    pieces,
+    isPending,
+    handleAddPiece,
+    handleRemovePiece,
+    openDatePicker,
+    handleCreate,
+  } = useCreateStorefrontOrderScreen();
 
   return (
     <Box flex={1} backgroundColor="primary50">
-      <DatePickerModal
-        visible={showDatePicker}
-        currentDate={dueDate}
-        onConfirm={(date) => {
-          setDueDate(date);
-          setShowDatePicker(false);
-        }}
-        onCancel={() => setShowDatePicker(false)}
-      />
+      <DragHandle />
 
       <ScrollView
         style={{ flex: 1, padding: theme.spacing.m, gap: theme.spacing.l }}
+        contentContainerStyle={{ paddingBottom: theme.spacing.m }}
       >
-        <Box flexDirection="row" paddingVertical="m">
-          <CloseButton onPress={router.back} />
-          <Box flex={1} />
-          <IconButton
-            variant="primary"
-            symbol="checkmark"
-            onPress={handleCreate}
-          />
-        </Box>
-        <Text variant="heading">New Order</Text>
+        <Text variant="heading" marginBottom="m">
+          New Order
+        </Text>
         <Box>
           <Box gap="xs" paddingVertical="xs">
             <Text variant="label">Order Name *</Text>
             <TextInput
+              autoFocus
               value={name}
               onChangeText={setName}
+              multiline={false}
+              returnKeyType="done"
+              submitBehavior="blurAndSubmit"
               placeholder="e.g., 333 Market, Flower Shop"
             />
           </Box>
 
           <Box gap="xs" paddingVertical="xs">
             <Text variant="label">Target Completion Date (Optional)</Text>
-            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+            <TouchableOpacity onPress={openDatePicker}>
               <Box
                 backgroundColor="input400"
                 padding="m"
@@ -177,7 +127,7 @@ export default function CreateStorefrontOrderScreen() {
                   rows[rowIndex].push(config);
                   return rows;
                 },
-                []
+                [],
               )
               .map((rowConfigs, index) => (
                 <PieceTypeRow
@@ -189,6 +139,22 @@ export default function CreateStorefrontOrderScreen() {
           </Box>
         </Box>
       </ScrollView>
+
+      <Box paddingHorizontal="m" paddingBottom="xl" gap="s">
+        <TouchableOpacity onPress={handleCreate} disabled={isPending}>
+          <Box
+            backgroundColor="primary900"
+            padding="m"
+            borderRadius="l"
+            alignItems="center"
+            opacity={isPending ? 0.6 : 1}
+          >
+            <Text variant="button">
+              {isPending ? "SAVING..." : "SAVE ORDER"}
+            </Text>
+          </Box>
+        </TouchableOpacity>
+      </Box>
     </Box>
   );
 }

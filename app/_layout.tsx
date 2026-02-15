@@ -30,15 +30,30 @@ export default function RootLayout() {
                 }}
               />
               <Stack.Screen
-                name="customers/[id]/conversation"
+                name="bulk-codes/create"
                 options={{
-                  headerStyle: {
-                    backgroundColor: theme.colors.primary100,
-                  },
-                  headerTitleStyle: {
-                    color: theme.colors.primary900,
-                  },
-                  presentation: "card",
+                  headerShown: false,
+                  presentation: "formSheet",
+                  sheetAllowedDetents: [0.4],
+                  sheetGrabberVisible: true,
+                  contentStyle: { backgroundColor: theme.colors.primary50 },
+                }}
+              />
+              <Stack.Screen
+                name="bulk-codes/[id]"
+                options={{
+                  headerShown: false,
+                  presentation: "modal",
+                }}
+              />
+              <Stack.Screen
+                name="date-picker"
+                options={{
+                  headerShown: false,
+                  presentation: "formSheet",
+                  sheetAllowedDetents: [0.45],
+                  sheetGrabberVisible: true,
+                  contentStyle: { backgroundColor: theme.colors.primary50 },
                 }}
               />
               <Stack.Screen
