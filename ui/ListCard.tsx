@@ -1,10 +1,14 @@
 import { Box, Text } from "@/components";
+import { Badge } from "@/ui/Badge";
+import { theme } from "@/theme";
 import { TouchableOpacity } from "react-native";
+
+type BadgeColor = keyof (typeof theme)["colors"];
 
 interface ListCardProps {
   title: string;
   badge?: string;
-  badgeBg?: "interactive300" | "input300";
+  badgeBg?: BadgeColor;
   subtitle?: string;
   meta?: string;
   onPress?: () => void;
@@ -27,18 +31,7 @@ export function ListCard({ title, badge, badgeBg = "interactive300", subtitle, m
           marginBottom="xs"
         >
           <Text variant="heading">{title}</Text>
-          {badge && (
-            <Box
-              paddingHorizontal="s"
-              paddingVertical="xs"
-              borderRadius="s"
-              backgroundColor={badgeBg}
-            >
-              <Text variant="label" fontSize={10} color="primary700">
-                {badge}
-              </Text>
-            </Box>
-          )}
+          {badge && <Badge label={badge} backgroundColor={badgeBg} />}
         </Box>
         {subtitle && (
           <Text variant="body" color="primary900" fontSize={14}>
