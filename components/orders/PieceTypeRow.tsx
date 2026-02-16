@@ -52,8 +52,8 @@ export function PieceTypeRow({ configs, onAddToOrder }: PieceTypeRowProps) {
 
   const handleClearConfig = () => {
     setSelectedConfig(null);
-    setSize(null);
-    setQuantity(null);
+    setSize(undefined);
+    setQuantity("1");
   };
 
   const isValid = quantity && parseInt(quantity) > 0;

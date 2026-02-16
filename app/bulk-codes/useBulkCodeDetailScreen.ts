@@ -14,12 +14,14 @@ export function useBulkCodeDetailScreen() {
   const isRedeemed = bulkCode ? !!bulkCode.redeemed_at : false;
 
   const formatDate = useCallback(
-    (dateString: string) =>
-      new Date(dateString).toLocaleDateString("en-US", {
+    (dateString: string | null) => {
+      if (!dateString) return "—";
+      return new Date(dateString).toLocaleDateString("en-US", {
         month: "long",
         day: "numeric",
         year: "numeric",
-      }),
+      });
+    },
     [],
   );
 
